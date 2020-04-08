@@ -14,22 +14,39 @@
           <!--就诊卡登录-->
           <div class="col-xs-12 col-sm-6 col-md-6" id="loginCard">
             <h3>用户登录</h3>
-            <div class="input-box clearfix">
-              <i class="ic-card"></i>
-              <input
-                type="text"
-                class="input input-80"
-                placeholder="请输入就诊卡号"
-                id="iptCard"
-                v-model="cardNumber"
-                autofocus="autofocus"
-              />
-            </div>
-            <div class="row log-btn">
-              <div class="col-xs-4 col-md-4">
-                <button type="button" class="mbtn" @click="btnSubmitCard">登 录</button>
+            <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form">
+              <!-- <div class="input-box clearfix">
+                <i class="ic-card"></i>
+                <input
+                  type="text"
+                  class="input input-80"
+                  placeholder="请输入就诊卡号"
+                  id="iptCard"
+                  v-model="loginForm.cardNumber"
+                  autofocus="autofocus"
+                />
+              </div>-->
+
+              <el-form-item prop="cardNumber">
+                <div class="input-box clearfix">
+                  <i class="ic-card"></i>
+                  <input
+                    type="text"
+                    class="input input-80"
+                    placeholder="请输入就诊卡号"
+                    id="iptCard"
+                    v-model="loginForm.cardNumber"
+                    autofocus="autofocus"
+                  />
+                </div>
+              </el-form-item>
+
+              <div class="row log-btn">
+                <div class="col-xs-4 col-md-4">
+                  <button type="button" class="mbtn" @click.prevent.stop="btnSubmitCard">登 录</button>
+                </div>
               </div>
-            </div>
+            </el-form>
           </div>
         </div>
       </div>
@@ -40,12 +57,25 @@
 export default {
   data() {
     return {
-      cardNumber: ""
+      loginForm: {
+        cardNumber: ""
+      },
+      loginRules: {
+        cardNumber: [{ required: true, message: "请输入卡号", trigger: "blur" }]
+      }
     };
   },
   methods: {
     btnSubmitCard() {
-      this.$router.push("/lookInfo");
+      this.$refs.loginFormRef.validate(async valid => {
+        if (!valid) return;
+        const { data: res } = await this.$http.post("/checkList/confirmInfo", {
+          orderNo: this.loginForm.cardNumber
+        });
+        console.log(res);
+        if (res.code != 200 || res.data == null) return this.$message.error("请输入正确卡号");
+        this.$router.push("/lookInfo");
+      });
     }
   }
 };
