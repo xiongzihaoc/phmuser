@@ -17,6 +17,16 @@ const routes = [{
     name: 'ViewInfo',
     component: () => import('@/components/ViewInfo.vue'),
   },
+  {
+    path: '/testReport',
+    name: 'testReport',
+    component: () => import('@/components/TestCard/Test.vue'),
+  },
+  {
+    path: '/testWork',
+    name: 'testWork',
+    component: () => import('@/components/TestCard/TestWork.vue'),
+  },
 ]
 
 const router = new VueRouter({

@@ -7,7 +7,9 @@ import jquery from 'jquery'
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap/dist/js/bootstrap.js';
 import './css/main.css'
-
+import Vant from 'vant';
+import 'vant/lib/index.css';
+Vue.use(Vant)
 // 导入axios
 import axios from 'axios'
 

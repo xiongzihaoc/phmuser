@@ -15,18 +15,6 @@
           <div class="col-xs-12 col-sm-6 col-md-6" id="loginCard">
             <h3>用户登录</h3>
             <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form">
-              <!-- <div class="input-box clearfix">
-                <i class="ic-card"></i>
-                <input
-                  type="text"
-                  class="input input-80"
-                  placeholder="请输入就诊卡号"
-                  id="iptCard"
-                  v-model="loginForm.cardNumber"
-                  autofocus="autofocus"
-                />
-              </div>-->
-
               <el-form-item prop="cardNumber">
                 <div class="input-box clearfix">
                   <i class="ic-card"></i>
@@ -40,9 +28,8 @@
                   />
                 </div>
               </el-form-item>
-
               <div class="row log-btn">
-                <div class="col-xs-4 col-md-4">
+                <div class="col-xs-4 col-md-4 ccc">
                   <button type="button" class="mbtn" @click.prevent.stop="btnSubmitCard">登 录</button>
                 </div>
               </div>
@@ -51,6 +38,17 @@
         </div>
       </div>
     </div>
+
+    <van-dialog
+      class="dialogSu"
+      :showCancelButton="false"
+      v-model="show"
+      title="提示"
+      show-cancel-button
+      @confirm="loginEnter"
+    >
+      <p class="loginSuccess" style="text-align:center">登录成功,查看个人信息</p>
+    </van-dialog>
   </div>
 </template>
 <script>
@@ -62,7 +60,9 @@ export default {
       },
       loginRules: {
         cardNumber: [{ required: true, message: "请输入卡号", trigger: "blur" }]
-      }
+      },
+      show: false,
+      personalList: {}
     };
   },
   methods: {
@@ -72,9 +72,16 @@ export default {
         const { data: res } = await this.$http.post("/checkList/confirmInfo", {
           orderNo: this.loginForm.cardNumber
         });
-        console.log(res);
-        if (res.code != 200 || res.data == null) return this.$message.error("请输入正确卡号");
-        this.$router.push("/lookInfo");
+        if (res.code != 200 || res.data == null)
+          return this.$message.error("卡号不存在");
+        this.personalList = res.data;
+        this.show = true;
+      });
+    },
+    loginEnter() {
+      this.$router.push({
+        path: "/lookInfo",
+        query: { personalList: JSON.stringify(this.personalList) }
       });
     }
   }
@@ -84,13 +91,20 @@ export default {
 .log-box {
   position: relative;
 }
-.SuccDialog {
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  transform: translate(-50%, -50%);
-  width: 200px;
-  height: 200px;
-  background: rgba(0, 0, 0, 0.35);
+.show {
+  width: 60%;
+  max-width: 600px;
+  border-radius: 8px;
+}
+.loginSuccess {
+  padding: 30px 0;
+}
+.dialogSu {
+  width: 80%;
+  max-width: 600px;
+}
+.ccc {
+  margin-left: 50%;
+  transform: translate(-50%);
 }
 </style>
