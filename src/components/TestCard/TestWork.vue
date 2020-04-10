@@ -1,78 +1,132 @@
 <template>
-  <div class="testWork">
-    <div class="header">
-      <div class="container">
-        <div class="row">
-          <div class="col-xs-6 col-md-6" id="logo">
-            <a href="index.html">
-              <img src="../../images/logo.png" />
-            </a>
-          </div>
-          <div class="col-xs-6 col-md-6 text-right login-out">退出登录</div>
+<body class="ubg2">
+  <div class="header">
+    <div class="container">
+      <div class="row2">
+        <div class="col-xs-6 col-md-6" id="logo">
+          <a href>
+            <img src="../../images/logo.png" />
+          </a>
         </div>
+        <div class="col-xs-6 col-md-6 text-right login-out">退出登录</div>
       </div>
     </div>
+  </div>
+  <div class="container">
     <!------套餐量表列表------>
-    <div class="container">
+    <div id="testlist" class="list__box">
       <div class="row mt20 mb20">
-        <div class="col-xs-6 col-md-6"></div>
+        <div class="col-xs-6 col-md-6">
+          <div class="taocanName" style="padding-left: 2px;"></div>
+        </div>
         <div class="col-xs-6 col-md-6">
           <div class="tou text-right">
-            <a href="javascript:;history.back()" class="green">
+            <a href="javascript:;history.back()" id="testListBack" class="green">
               返回
               <i class="ic ic-arr-right"></i>
             </a>
           </div>
         </div>
       </div>
-      <!------量表列表------>
-      <div class="row mt20 mb20">
-        ;
-        <div class="col-xs-12 col-md-12">
-          <div class="taocanName" style="padding-left:2px;"></div>
-        </div>
-      </div>
-
-      <div class="row test">
-        <div class="col-xs-12 col-md-10 cont">
-          <h3>111</h3>
-          <div class="txt">111</div>
-          <div class="row">
-            <div class="col-xs-6 col-md-4">检测单位：</div>
-            <div class="col-xs-6 col-md-3">卡号：</div>
-            <div class="col-xs-6 col-md-3">开卡时间：</div>
-            <div class="col-xs-6 col-md-2">状态：已完成</div>
+      <div id="listBox">
+        <div class="row mt20 mb20" v-for="(item,index) in taoCanList" :key="index">
+          <div class="col-xs-12 col-md-12">
+            <div class="taocanName" style="padding-left:2px;">{{item.packageName}}</div>
+            <div class="row test" v-for="(subItem,i) in item.sheets" :key="i">
+              <div class="col-xs-12 col-md-10 cont">
+                <h3>{{subItem.name}}</h3>
+                <div class="txt">
+                  <p>{{subItem.instruction}}</p>
+                </div>
+                <div class="row">
+                  <div class="col-xs-6 col-md-4">检测单位：{{subItem.dept}}</div>
+                  <div class="col-xs-6 col-md-3">卡号：{{order}}</div>
+                  <div class="col-xs-6 col-md-3">开卡时间：{{timesChangeDate(subItem.createTime)}}</div>
+                  <div class="col-xs-6 col-md-2">状态：未完成</div>
+                </div>
+              </div>
+              <div class="col-xs-12 col-md-2 text-center">
+                <div class="btn-box">
+                  <a
+                    href="javascript:;"
+                    data-id="368"
+                    id="btn_368"
+                    class="mbtn"
+                    data-state="0"
+                    @click.prevent.stop="jumpStart(subItem)"
+                  >开始答题</a>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
+      <div class="text-center">
+        <button
+          type="button"
+          class="btn btn-success pdlr30 btn-submit"
+          id="testSubmit"
+          disabled="disabled"
+        >提交答案</button>
+      </div>
     </div>
   </div>
+</body>
 </template>
 <script>
 export default {
   data() {
-    return {};
+    return {
+      taoCanList: [],
+      order: ""
+    };
   },
   created() {
+    this.order = window.localStorage.getItem("order");
     this.getCarfInfoList();
   },
   methods: {
     async getCarfInfoList() {
-        const {data:res} = await this.$http.post('checkList/getPackage',{
-            
-        })
+      const { data: res } = await this.$http.post("checkList/getPackage", {
+        orderNo: "10000220200408135042"
+      });
+      console.log(res);
+      this.taoCanList = res.data;
+    },
+    jumpStart(info) {
+      console.log(info);
+
+      this.$router.push({
+        path: "StartTset",
+        query: { infoList: JSON.stringify(info) }
+      });
+    },
+    // 转换时间格式
+    timesChangeDate(times) {
+      var date = new Date(times);
+      var y = date.getFullYear();
+      var mon = date.getMonth() + 1;
+      var d = date.getDate();
+      if (mon < 10) {
+        mon = "0" + mon;
+      }
+      if (d < 10) {
+        d = "0" + d;
+      }
+      return `${y}-${mon}-${d}`;
     }
   }
 };
-
 </script>
-<style lang='less'>
-.testWork {
-  width: 100%;
-  height: 100%;
-  min-width: 290px;
+<style >
+/* .testWork {
   background: #f7f7f7 url("../../images/nbg2.jpg") repeat-x bottom center;
   background-size: contain;
+  background-attachment: fixed;
   padding-bottom: 59px;
+} */
+.row2 {
+  display: flex;
 }
+
 </style>

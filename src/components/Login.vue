@@ -75,6 +75,7 @@ export default {
         if (res.code != 200 || res.data == null)
           return this.$message.error("卡号不存在");
         this.personalList = res.data;
+        window.localStorage.setItem("order", this.loginForm.cardNumber);
         this.show = true;
       });
     },

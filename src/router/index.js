@@ -27,6 +27,16 @@ const routes = [{
     name: 'testWork',
     component: () => import('@/components/TestCard/TestWork.vue'),
   },
+  {
+    path: '/StartTset',
+    name: 'StartTset',
+    component: () => import('@/components/TestCard/StartTset.vue'),
+  },
+  {
+    path: '/StartTestWrite',
+    name: 'StartTestWrite',
+    component: () => import('@/components/TestCard/StartTestWrite.vue'),
+  },
 ]
 
 const router = new VueRouter({
