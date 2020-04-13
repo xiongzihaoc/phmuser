@@ -36,6 +36,9 @@ const routes = [{
     path: '/StartTestWrite',
     name: 'StartTestWrite',
     component: () => import('@/components/TestCard/StartTestWrite.vue'),
+    meta: {
+      keepAlive: true
+    }
   },
 ]
 

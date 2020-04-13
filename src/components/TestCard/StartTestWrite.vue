@@ -41,60 +41,68 @@
               color="#FF6969"
               stroke-width="7"
               :show-pivot="false"
-              :percentage="percentage"
+              :percentage="optionProgress"
             />
           </div>
           <div class="col-xs-2 col-md-2 text-right">
-            <span class="gray">{{sheetLength}}</span>
+            <span class="red">{{this.num + 1}}</span>
             <span class="gray">/{{sheetLength}}</span>
           </div>
         </div>
       </div>
 
       <div class="pd2">
-        <div id="quizBox" class="clearfix" style="min-height: 100px">
-          <div class="a-title mb20 clearfix" data-questionid="9954" data-type="1">
-            {{firstSheet.quesContent}}
-            <img src class="tImg q-image" />
-          </div>
-          <div
-            class="radio"
-            data-optionid="64116"
-            data-select="0"
-            style="{marginLeft}"
-            v-for="(item,index) in this.firstSheet.option"
-            :key="index"
-          >
-            <i class="ic ic-radio"></i>
-            {{item.optContent}}
-            <img src class="aImg q-image" />
-          </div>
+        <!-- 题目标题 -->
+        <div
+          class="a-title mb20 clearfix"
+          data-questionid="9954"
+          data-type="1"
+          v-if="firstSheet.quesMedia != ''"
+          v-html="firstSheet.quesMedia"
+        ></div>
+        <div
+          class="a-title mb20 clearfix"
+          data-questionid="9954"
+          data-type="1"
+          v-else
+        >{{firstSheet.quesCont}}</div>
+        <div v-for="(item,index) in this.firstSheet.option" :key="index">
+          <el-radio-group class="radio" v-model="radioList">
+            <el-radio
+              :label="item"
+              v-model="item.index"
+              @change="nextQues(item,index)"
+            >{{item.optContent}}</el-radio>
+          </el-radio-group>
         </div>
-        <div class="row2 mt40">
-          <div class="col-xs-12 col-md-4 tips">
-            <span class="red">请注意：</span>
-            <span class="gray" id="tips">单选题，请选择！</span>
-          </div>
-          <div class="col-xs-12 col-md-8 text-right">
-            <a
-              href="javascript:;"
-              class="btn btn-danger bg-red pdlr30"
-              id="btnPre"
-              style="display: none"
-            >返回上一题</a>
-            <a
-              href="javascript:;"
-              class="btn btn-danger bg-red pdlr30 ml10"
-              id="btnNext"
-              @click="nextQues"
-            >下一题</a>
-            <button
-              type="button"
-              class="btn btn-success pdlr30 ml20"
-              id="btnSubmit"
-              style="display: none"
-            >提交</button>
-          </div>
+      </div>
+      <div class="row mt40">
+        <div class="col-xs-12 col-md-4 tips">
+          <span class="red">请注意：</span>
+          <span class="gray" id="tips">单选题，请选择！</span>
+        </div>
+        <div class="col-xs-12 col-md-8 text-right">
+          <a
+            href="javascript:;"
+            class="btn btn-danger bg-red pdlr30"
+            id="btnPre"
+            v-show="btnopen"
+            @click.prevent.stop="backTo"
+          >返回上一题</a>
+          <a
+            href="javascript:;"
+            class="btn btn-danger bg-red pdlr30 ml10"
+            id="btnNext"
+            @click="nextQues"
+            v-show="nextQu"
+          >下一题</a>
+          <button
+            type="button"
+            class="btn btn-success pdlr30 ml20"
+            id="btnSubmit"
+            v-show="btnSubmit"
+            @click="btnSave"
+          >提交</button>
         </div>
       </div>
     </div>
@@ -133,28 +141,102 @@ export default {
       sheetList: [],
       firstSheet: {},
       sheetLength: null,
-      percentage: 30,
-      num: 0
+      optionProgress: 0,
+      num: 0,
+      radioList: "",
+      btnopen: false,
+      btnSubmit: false,
+      nextQu: true,
+      divide: ""
     };
   },
   created() {
     this.infoForm = JSON.parse(this.$route.query.infoList);
-    // console.log(this.infoForm);
     this.getSheetList();
   },
   methods: {
+    // 获取量表题目列表
     async getSheetList() {
       const { data: res } = await this.$http.post("sheetQues/list", {
         sheetUuid: this.infoForm.sheetUuid
       });
-      console.log(res.rows);
+      var str = res.rows[0].quesMedia;
+
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
+      this.divide = 100 / this.sheetLength; //每等分值
       this.firstSheet = this.sheetList[this.num];
     },
-    nextQues() {
-      this.num = this.num +1;
+    // 下一题
+    async nextQues(info, index) {
+
+      if (this.num >= 0) {
+        this.btnopen = true;
+      }
+      if (this.radioList != "") {
+        this.$toast.loading({
+          message: "加载中...",
+          forbidClick: false,
+          loadingType: "spinner",
+          duration: 0
+        });
+        const { data: res } = await this.$http.post(
+          "sheetQues/subSingleAnswer",
+          {
+            ansUuid: this.infoForm.ansUuid,
+            sheetUuid: this.infoForm.sheetUuid,
+            quesOrder: this.firstSheet.quesOrder,
+            quesContent: this.firstSheet.quesContent,
+            optOrder: info.optOrder,
+            optScore: info.optScore,
+            optContent: info.optContent
+          }
+        );
+        this.radioList = "";
+        this.optionProgress = (this.num + 1) * this.divide;
+        this.$toast.clear();
+      } else {
+        if (this.num == 0) {
+          this.btnopen = false;
+        }
+        return this.$toast.fail("请选择选项");
+      }
+      if (this.num != this.sheetLength - 1) {
+        this.num += 1;
+        this.getSheetList();
+      } else {
+        this.nextQu = false;
+        this.btnSubmit = true;
+      }
+    },
+    // 上一题
+    backTo() {
+      if (this.num == 1) {
+        this.btnopen = false;
+      }
+      this.$toast.loading({
+        message: "加载中...",
+        forbidClick: false,
+        loadingType: "spinner",
+        duration: 0
+      });
+      this.$toast.clear();
+      this.num -= 1;
       this.getSheetList();
+      this.optionProgress = (this.num + 1) * this.divide;
+    },
+    // 提交
+    async btnSave() {
+            this.$toast.loading({
+        message: "加载中...",
+        forbidClick: false,
+        loadingType: "spinner",
+        duration: 0
+      });
+      const { data: res } = await this.$http.post("sheetQues/approve", {
+        ansUuid: this.infoForm.ansUuid
+      });
+           this.$toast.clear();
     }
   }
 };
@@ -169,5 +251,13 @@ export default {
 }
 .row2 {
   display: flex;
+}
+.test-answer .radio {
+  margin-bottom: 5px;
+}
+.a-title img {
+  width: 40px;
+  height: 40px;
+  vertical-align: bottom;
 }
 </style>

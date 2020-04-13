@@ -95,7 +95,7 @@ export default {
     },
     jumpStart(info) {
       console.log(info);
-
+      
       this.$router.push({
         path: "StartTset",
         query: { infoList: JSON.stringify(info) }
