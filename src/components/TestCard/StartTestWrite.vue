@@ -151,7 +151,6 @@ export default {
         sheetUuid: this.infoForm.sheetUuid
       });
       var str = res.rows[0].quesMedia;
-      // console.log(res);
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
       this.divide = 100 / this.sheetLength; //每等分值
@@ -159,7 +158,6 @@ export default {
     },
     // 下一题
     async nextQues(info) {
-      console.log(this.num, "下");
 
       if (this.num >= 0) {
         this.btnopen = true;
@@ -204,7 +202,7 @@ export default {
       this.num -= 1;
       if (this.num == 0) {
         this.btnopen = false;
-        this.optionProgress = 0
+        this.optionProgress = 0;
       }
       if (this.num < this.sheetLength) {
         this.nextQu = true;

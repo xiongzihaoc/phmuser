@@ -126,8 +126,6 @@ export default {
   },
   methods: {
     async handleLogin() {
-      console.log(this.loginForm);
-
       if (this.loginForm.hasConfirm == 0) {
         const { data: res } = await this.$http.post("checkList/update", {
           id: this.loginForm.id,
@@ -153,8 +151,6 @@ export default {
           edu: this.loginForm.edu,
           hasConfirm: "1"
         });
-        console.log(res);
-
         this.$router.push("testReport");
       }
     },

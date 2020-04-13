@@ -31,7 +31,10 @@
                 <div class="row">
                   <div style="margin-bottom:5px;" class="col-xs-6 col-md-4">检测单位：{{subItem.dept}}</div>
                   <div style="margin-bottom:5px;" class="col-xs-6 col-md-3">卡号：{{order}}</div>
-                  <div style="margin-bottom:5px;" class="col-xs-6 col-md-3">开卡时间：{{timesChangeDate(subItem.createTime)}}</div>
+                  <div
+                    style="margin-bottom:5px;"
+                    class="col-xs-6 col-md-3"
+                  >开卡时间：{{timesChangeDate(subItem.createTime)}}</div>
                   <div style="margin-bottom:5px;" class="col-xs-6 col-md-2">状态：未完成</div>
                 </div>
               </div>
@@ -121,6 +124,6 @@ export default {
   display: flex;
 }
 .taocanNameSty {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
 }
 </style>
