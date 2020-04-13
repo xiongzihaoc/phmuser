@@ -1,17 +1,7 @@
 <template>
 <body class="ubg2">
-  <div class="header">
-    <span class="container">
-      <span class="row2">
-        <div class="col-xs-6 col-md-6" id="logo">
-          <img src="../../images/logo.png" />
-        </div>
-        <span class="col-xs-6 col-md-6 text-right login-out">
-          <span>退出登录</span>
-        </span>
-      </span>
-    </span>
-  </div>
+  <!-- 公用头部组件 -->
+  <Header></Header>
   <div class="container">
     <div class="row idx">
       <div class="col-sm-12 col-md-6">
@@ -35,7 +25,9 @@
 </body>
 </template>
 <script>
+import Header from "../common/header";
 export default {
+  components: { Header },
   data() {
     return {};
   },

@@ -1,17 +1,7 @@
 <template>
 <body class="ubg2">
-  <div class="header">
-    <div class="container">
-      <div class="row2">
-        <div class="col-xs-6 col-md-6" id="logo">
-          <a href="javascript:;">
-            <img src="../../images/logo.png" />
-          </a>
-        </div>
-        <div class="col-xs-6 col-md-6 text-right login-out">退出登录</div>
-      </div>
-    </div>
-  </div>
+  <!-- 公用头部组件 -->
+  <Header></Header>
   <div class="container">
     <div class="row mt20 mb20">
       <div class="col-xs-6 col-md-6"></div>
@@ -46,7 +36,9 @@
 </body>
 </template>
 <script>
+import Header from "../common/header";
 export default {
+  components: { Header },
   data() {
     return {
       infoForm: {}
@@ -66,7 +58,6 @@ export default {
 };
 </script>
 <style lang='less'>
-
 .row2 {
   display: flex;
 }

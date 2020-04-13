@@ -38,7 +38,6 @@
         </div>
       </div>
     </div>
-
     <van-dialog
       class="dialogSu"
       :showCancelButton="false"
@@ -69,11 +68,11 @@ export default {
     btnSubmitCard() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
-        const { data: res } = await this.$http.post("/checkList/confirmInfo", {
+        const { data: res } = await this.$http.post("checkList/confirmInfo", {
           orderNo: this.loginForm.cardNumber
         });
         if (res.code != 200 || res.data == null)
-          return this.$message.error("卡号不存在");
+          return this.$toast.fail("卡号不存在");
         this.personalList = res.data;
         window.localStorage.setItem("order", this.loginForm.cardNumber);
         this.show = true;

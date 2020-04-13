@@ -1,17 +1,7 @@
 <template>
 <body class="ubg2">
-  <div class="header">
-    <div class="container">
-      <div class="row2">
-        <div class="col-xs-6 col-md-6" id="logo">
-          <a href="javascript:;">
-            <img src="../../images/logo.png" />
-          </a>
-        </div>
-        <div class="col-xs-6 col-md-6 text-right login-out" onclick="delMember();">退出登录</div>
-      </div>
-    </div>
-  </div>
+  <!-- 公用头部组件 -->
+  <Header></Header>
   <!------题目列表------>
   <div class="mb20" id="testQuestion" style>
     <div class="row mt20 mb20">
@@ -52,57 +42,55 @@
       </div>
 
       <div class="pd2">
-        <!-- 题目标题 -->
-        <div
-          class="a-title mb20 clearfix"
-          data-questionid="9954"
-          data-type="1"
-          v-if="firstSheet.quesMedia != ''"
-          v-html="firstSheet.quesMedia"
-        ></div>
-        <div
-          class="a-title mb20 clearfix"
-          data-questionid="9954"
-          data-type="1"
-          v-else
-        >{{firstSheet.quesCont}}</div>
-        <div v-for="(item,index) in this.firstSheet.option" :key="index">
-          <el-radio-group class="radio" v-model="radioList">
-            <el-radio
-              :label="item"
-              v-model="item.index"
-              @change="nextQues(item,index)"
-            >{{item.optContent}}</el-radio>
-          </el-radio-group>
+        <div id="quizBox" class="clearfix" style="min-height: 100px">
+          <!-- 题目标题 -->
+          <div
+            class="a-title mb20 clearfix"
+            data-questionid="9954"
+            data-type="1"
+            v-if="firstSheet.quesMedia != ''"
+            v-html="firstSheet.quesMedia"
+          ></div>
+          <div
+            class="a-title mb20 clearfix"
+            data-questionid="9954"
+            data-type="1"
+            v-else
+          >{{firstSheet.quesCont}}</div>
+          <div v-for="(item,index) in this.firstSheet.option" :key="index">
+            <el-radio-group class="radio" v-model="radioList">
+              <el-radio :label="item" @change="nextQues(item)">{{item.optContent}}</el-radio>
+            </el-radio-group>
+          </div>
         </div>
-      </div>
-      <div class="row mt40">
-        <div class="col-xs-12 col-md-4 tips">
-          <span class="red">请注意：</span>
-          <span class="gray" id="tips">单选题，请选择！</span>
-        </div>
-        <div class="col-xs-12 col-md-8 text-right">
-          <a
-            href="javascript:;"
-            class="btn btn-danger bg-red pdlr30"
-            id="btnPre"
-            v-show="btnopen"
-            @click.prevent.stop="backTo"
-          >返回上一题</a>
-          <a
-            href="javascript:;"
-            class="btn btn-danger bg-red pdlr30 ml10"
-            id="btnNext"
-            @click="nextQues"
-            v-show="nextQu"
-          >下一题</a>
-          <button
-            type="button"
-            class="btn btn-success pdlr30 ml20"
-            id="btnSubmit"
-            v-show="btnSubmit"
-            @click="btnSave"
-          >提交</button>
+        <div class="row mt40">
+          <div class="col-xs-12 col-md-4 tips">
+            <span class="red">请注意：</span>
+            <span class="gray" id="tips">单选题，请选择！</span>
+          </div>
+          <div class="col-xs-12 col-md-8 text-right">
+            <a
+              href="javascript:;"
+              class="btn btn-danger bg-red pdlr30"
+              id="btnPre"
+              v-show="btnopen"
+              @click.prevent.stop="backTo"
+            >返回上一题</a>
+            <a
+              href="javascript:;"
+              class="btn btn-danger bg-red pdlr30 ml10"
+              id="btnNext"
+              @click="nextQues"
+              v-show="nextQu"
+            >下一题</a>
+            <button
+              type="button"
+              class="btn btn-success pdlr30 ml20"
+              id="btnSubmit"
+              v-show="btnSubmit"
+              @click="btnSave"
+            >提交</button>
+          </div>
         </div>
       </div>
     </div>
@@ -134,7 +122,9 @@
 </body>
 </template>
 <script>
+import Header from "../common/header";
 export default {
+  components: { Header },
   data() {
     return {
       infoForm: {},
@@ -161,14 +151,15 @@ export default {
         sheetUuid: this.infoForm.sheetUuid
       });
       var str = res.rows[0].quesMedia;
-
+      // console.log(res);
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
       this.divide = 100 / this.sheetLength; //每等分值
       this.firstSheet = this.sheetList[this.num];
     },
     // 下一题
-    async nextQues(info, index) {
+    async nextQues(info) {
+      console.log(this.num, "下");
 
       if (this.num >= 0) {
         this.btnopen = true;
@@ -192,7 +183,6 @@ export default {
             optContent: info.optContent
           }
         );
-        this.radioList = "";
         this.optionProgress = (this.num + 1) * this.divide;
         this.$toast.clear();
       } else {
@@ -211,8 +201,14 @@ export default {
     },
     // 上一题
     backTo() {
-      if (this.num == 1) {
+      this.num -= 1;
+      if (this.num == 0) {
         this.btnopen = false;
+        this.optionProgress = 0
+      }
+      if (this.num < this.sheetLength) {
+        this.nextQu = true;
+        this.btnSubmit = false;
       }
       this.$toast.loading({
         message: "加载中...",
@@ -221,22 +217,14 @@ export default {
         duration: 0
       });
       this.$toast.clear();
-      this.num -= 1;
       this.getSheetList();
       this.optionProgress = (this.num + 1) * this.divide;
     },
     // 提交
     async btnSave() {
-            this.$toast.loading({
-        message: "加载中...",
-        forbidClick: false,
-        loadingType: "spinner",
-        duration: 0
-      });
       const { data: res } = await this.$http.post("sheetQues/approve", {
         ansUuid: this.infoForm.ansUuid
       });
-           this.$toast.clear();
     }
   }
 };

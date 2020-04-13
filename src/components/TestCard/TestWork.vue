@@ -1,17 +1,7 @@
 <template>
 <body class="ubg2">
-  <div class="header">
-    <div class="container">
-      <div class="row2">
-        <div class="col-xs-6 col-md-6" id="logo">
-          <a href>
-            <img src="../../images/logo.png" />
-          </a>
-        </div>
-        <div class="col-xs-6 col-md-6 text-right login-out">退出登录</div>
-      </div>
-    </div>
-  </div>
+  <!-- 公用头部组件 -->
+  <Header></Header>
   <div class="container">
     <!------套餐量表列表------>
     <div id="testlist" class="list__box">
@@ -31,7 +21,7 @@
       <div id="listBox">
         <div class="row mt20 mb20" v-for="(item,index) in taoCanList" :key="index">
           <div class="col-xs-12 col-md-12">
-            <div class="taocanName" style="padding-left:2px;">{{item.packageName}}</div>
+            <div class="taocanName taocanNameSty" style="padding-left:2px;">{{item.packageName}}</div>
             <div class="row test" v-for="(subItem,i) in item.sheets" :key="i">
               <div class="col-xs-12 col-md-10 cont">
                 <h3>{{subItem.name}}</h3>
@@ -39,10 +29,10 @@
                   <p>{{subItem.instruction}}</p>
                 </div>
                 <div class="row">
-                  <div class="col-xs-6 col-md-4">检测单位：{{subItem.dept}}</div>
-                  <div class="col-xs-6 col-md-3">卡号：{{order}}</div>
-                  <div class="col-xs-6 col-md-3">开卡时间：{{timesChangeDate(subItem.createTime)}}</div>
-                  <div class="col-xs-6 col-md-2">状态：未完成</div>
+                  <div style="margin-bottom:5px;" class="col-xs-6 col-md-4">检测单位：{{subItem.dept}}</div>
+                  <div style="margin-bottom:5px;" class="col-xs-6 col-md-3">卡号：{{order}}</div>
+                  <div style="margin-bottom:5px;" class="col-xs-6 col-md-3">开卡时间：{{timesChangeDate(subItem.createTime)}}</div>
+                  <div style="margin-bottom:5px;" class="col-xs-6 col-md-2">状态：未完成</div>
                 </div>
               </div>
               <div class="col-xs-12 col-md-2 text-center">
@@ -61,7 +51,7 @@
           </div>
         </div>
       </div>
-      <div class="text-center">
+      <div class="text-center btnSubmitQues">
         <button
           type="button"
           class="btn btn-success pdlr30 btn-submit"
@@ -74,7 +64,9 @@
 </body>
 </template>
 <script>
+import Header from "../common/header";
 export default {
+  components: { Header },
   data() {
     return {
       taoCanList: [],
@@ -95,7 +87,7 @@ export default {
     },
     jumpStart(info) {
       console.log(info);
-      
+
       this.$router.push({
         path: "StartTset",
         query: { infoList: JSON.stringify(info) }
@@ -128,5 +120,7 @@ export default {
 .row2 {
   display: flex;
 }
-
+.taocanNameSty {
+  margin-bottom: 5px;
+}
 </style>
