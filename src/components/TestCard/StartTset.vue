@@ -46,6 +46,8 @@ export default {
   },
   created() {
     this.infoForm = JSON.parse(window.localStorage.getItem("info"));
+    console.log(this.infoForm);
+    
   },
   methods: {
     startTest() {

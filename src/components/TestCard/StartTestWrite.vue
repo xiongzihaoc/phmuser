@@ -22,7 +22,7 @@
         <h2 id="sheetName" data-id="368">{{infoForm.name}}</h2>
       </div>
       <div class="pd2">
-        <div class="row" style>
+        <div class="row3" style>
           <div class="col-xs-2 col-md-2 text-left">
             <h3 class="gray">进度条</h3>
           </div>
@@ -44,19 +44,12 @@
       <div class="pd2">
         <div id="quizBox" class="clearfix" style="min-height: 100px">
           <!-- 题目标题 -->
-          <!-- <div
-            class="a-title mb20 clearfix"
-            data-questionid="9954"
-            data-type="1"
-            v-if="sheetList[num].quesMedia != null || sheetList[num].quesMedia != undefined"
-            v-html="sheetList[num].quesMedia"
-          ></div>
           <div
             class="a-title mb20 clearfix"
             data-questionid="9954"
             data-type="1"
-            v-else
-          >{{sheetList[num].quesContent}}</div> -->
+            v-html="this.sheetList[this.num].quesMedia"
+          ></div>
           <div
             v-for="(item,index) in sheetList[num].option"
             :key="index"
@@ -142,6 +135,7 @@ export default {
         sheetUuid: this.infoForm.sheetUuid,
         ansUuid: this.infoForm.ansUuid
       });
+      console.log(res);
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
       for (var i = 0; i < this.sheetList.length; i++) {
@@ -279,7 +273,6 @@ export default {
         "sheetQues/subSingleAnswer",
         questionContent
       );
-      console.log(res);
     },
     // 提交
     async btnSave() {
@@ -290,7 +283,6 @@ export default {
       const { data: res } = await this.$http.post("sheetQues/approve", {
         ansUuid: this.infoForm.ansUuid
       });
-      this.show = true;
     },
     // 确定提交跳转
     writeEnter() {

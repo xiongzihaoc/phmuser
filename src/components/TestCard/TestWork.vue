@@ -46,8 +46,26 @@
                     id="btn_368"
                     class="mbtn"
                     data-state="0"
+                    v-if="subItem.state == 0"
                     @click.prevent.stop="jumpStart(subItem)"
                   >开始答题</a>
+                  <a
+                    href="javascript:;"
+                    data-id="368"
+                    id="btn_368"
+                    class="mbtn"
+                    data-state="0"
+                    v-if="subItem.state == 1"
+                    @click.prevent.stop="jumpStart(subItem)"
+                  >继续答题</a>
+                  <a
+                    href="javascript:;"
+                    data-id="368"
+                    id="btn_368"
+                    class="mbtn mbtn-gray"
+                    data-state="0"
+                    v-if="subItem.state == 2"
+                  >答题完毕</a>
                 </div>
               </div>
             </div>
@@ -73,7 +91,10 @@ export default {
   data() {
     return {
       taoCanList: [],
-      order: ""
+      order: "",
+      Continue: false,
+      over: false,
+      start: true
     };
   },
   created() {
@@ -83,9 +104,10 @@ export default {
   methods: {
     async getCarfInfoList() {
       const { data: res } = await this.$http.post("checkList/getPackage", {
-        orderNo: "10000220200408135042"
+        orderNo: this.order
       });
       console.log(res);
+      
       this.taoCanList = res.data;
     },
     jumpStart(info) {
