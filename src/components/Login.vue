@@ -69,19 +69,20 @@ export default {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
         const { data: res } = await this.$http.post("checkList/confirmInfo", {
-          orderNo: this.loginForm.cardNumber
+          orderNo: this.loginForm.cardNumber.trim()
         });
         if (res.code != 200 || res.data == null)
           return this.$toast.fail("卡号不存在");
         this.personalList = res.data;
+        console.log(this.personalList);
         window.localStorage.setItem("order", this.loginForm.cardNumber);
+        window.localStorage.setItem("infoForm", JSON.stringify(this.personalList));
         this.show = true;
       });
     },
     loginEnter() {
       this.$router.push({
-        path: "/lookInfo",
-        query: { personalList: JSON.stringify(this.personalList) }
+        path: "/lookInfo"
       });
     }
   }

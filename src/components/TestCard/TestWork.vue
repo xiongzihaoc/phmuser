@@ -89,11 +89,9 @@ export default {
       this.taoCanList = res.data;
     },
     jumpStart(info) {
-      console.log(info);
-
+      window.localStorage.setItem("info", JSON.stringify(info));
       this.$router.push({
-        path: "StartTset",
-        query: { infoList: JSON.stringify(info) }
+        path: "StartTset"
       });
     },
     // 转换时间格式

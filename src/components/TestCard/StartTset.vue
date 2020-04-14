@@ -45,13 +45,12 @@ export default {
     };
   },
   created() {
-    this.infoForm = JSON.parse(this.$route.query.infoList);
+    this.infoForm = JSON.parse(window.localStorage.getItem("info"));
   },
   methods: {
     startTest() {
       this.$router.push({
-        path: "StartTestWrite",
-        query: { infoList: JSON.stringify(this.infoForm) }
+        path: "StartTestWrite"
       });
     }
   }

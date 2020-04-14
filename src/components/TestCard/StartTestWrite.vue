@@ -22,7 +22,7 @@
         <h2 id="sheetName" data-id="368">{{infoForm.name}}</h2>
       </div>
       <div class="pd2">
-        <div class="row3" style>
+        <div class="row" style>
           <div class="col-xs-2 col-md-2 text-left">
             <h3 class="gray">进度条</h3>
           </div>
@@ -44,23 +44,28 @@
       <div class="pd2">
         <div id="quizBox" class="clearfix" style="min-height: 100px">
           <!-- 题目标题 -->
-          <div
+          <!-- <div
             class="a-title mb20 clearfix"
             data-questionid="9954"
             data-type="1"
-            v-if="firstSheet.quesMedia != ''"
-            v-html="firstSheet.quesMedia"
+            v-if="sheetList[num].quesMedia != null || sheetList[num].quesMedia != undefined"
+            v-html="sheetList[num].quesMedia"
           ></div>
           <div
             class="a-title mb20 clearfix"
             data-questionid="9954"
             data-type="1"
             v-else
-          >{{firstSheet.quesCont}}</div>
-          <div v-for="(item,index) in this.firstSheet.option" :key="index">
-            <el-radio-group class="radio" v-model="radioList">
-              <el-radio :label="item" @change="nextQues(item)">{{item.optContent}}</el-radio>
-            </el-radio-group>
+          >{{sheetList[num].quesContent}}</div> -->
+          <div
+            v-for="(item,index) in sheetList[num].option"
+            :key="index"
+            :class="[item.selected==1?'radio active':'radio']"
+            @click="radioCheck(item,index)"
+          >
+            <i :class="[item.selected==1?'ic ic-radio ic-radio-active':'ic ic-radio']"></i>
+            {{item.optContent}}
+            <img class="aImg" v-bind:src="item.descriptionImg" />
           </div>
         </div>
         <div class="row mt40">
@@ -97,28 +102,16 @@
   </div>
 
   <!--提交单套试题弹框-->
-  <div
-    class="modal ml-model"
-    style="display: none"
-    id="modalSubmit"
-    tabindex="-1"
-    role="dialog"
-    aria-labelledby="myModalLabel"
-    aria-hidden="hide"
+  <van-dialog
+    class="dialogSu"
+    :showCancelButton="true"
+    v-model="show"
+    title="提示"
+    show-cancel-button
+    @confirm="writeEnter"
   >
-    <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h4 class="modal-title text-center">提示</h4>
-        </div>
-        <div class="modal-body text-center" style="padding: 40px;">本套试题做题完毕，确认后不能再更改。</div>
-        <div class="modal-footer text-center">
-          <button type="button" class="btn bg-gray pdlr30" id="btnModelCancle">取消</button>
-          <button type="button" class="btn btn-danger bg-red pdlr30" id="btnModalSubmit">确定</button>
-        </div>
-      </div>
-    </div>
-  </div>
+    <p class="loginSuccess" style="text-align:center">本套试题做题完毕，确认后不能再更改。</p>
+  </van-dialog>
 </body>
 </template>
 <script>
@@ -129,100 +122,179 @@ export default {
     return {
       infoForm: {},
       sheetList: [],
-      firstSheet: {},
       sheetLength: null,
       optionProgress: 0,
       num: 0,
-      radioList: "",
       btnopen: false,
       btnSubmit: false,
       nextQu: true,
-      divide: ""
+      show: false
     };
   },
   created() {
-    this.infoForm = JSON.parse(this.$route.query.infoList);
+    this.infoForm = JSON.parse(window.localStorage.getItem("info"));
     this.getSheetList();
   },
   methods: {
     // 获取量表题目列表
     async getSheetList() {
       const { data: res } = await this.$http.post("sheetQues/list", {
-        sheetUuid: this.infoForm.sheetUuid
+        sheetUuid: this.infoForm.sheetUuid,
+        ansUuid: this.infoForm.ansUuid
       });
-      var str = res.rows[0].quesMedia;
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
-      this.divide = 100 / this.sheetLength; //每等分值
-      this.firstSheet = this.sheetList[this.num];
+      for (var i = 0; i < this.sheetList.length; i++) {
+        var optionList = this.sheetList[i].option;
+        var isSelected = false;
+        for (var j = 0; j < optionList.length; j++) {
+          if (optionList[j].selected == 1) {
+            isSelected = true;
+            break;
+          }
+        }
+        if (!isSelected) {
+          this.num = i;
+          break;
+        }
+      }
+      this.updateBtnType();
     },
-    // 下一题
-    async nextQues(info) {
-
-      if (this.num >= 0) {
+    radioCheck(item, index) {
+      console.log(item);
+      if (this.sheetLength >= this.num + 1) {
+        if (this.sheetList[this.num].quesType == 1) {
+          var optionList = this.sheetList[this.num].option;
+          for (var i = 0; i < optionList.length; i++) {
+            optionList[i].selected = 0;
+          }
+          this.sheetList[this.num].option[index].selected = 1;
+          this.submitSheetOption();
+          if (this.num + 1 < this.sheetLength) {
+            this.num++;
+          }
+          this.updateBtnType();
+        } else {
+          if (this.sheetList[this.num].option[index].selected == 0) {
+            this.sheetList[this.num].option[index].selected = 1;
+          } else {
+            this.sheetList[this.num].option[index].selected = 0;
+          }
+        }
+      }
+    },
+    updateBtnType() {
+      //改变按钮状态
+      if (this.num == 0) {
+        this.btnopen = false;
+      } else {
         this.btnopen = true;
       }
-      if (this.radioList != "") {
-        this.$toast.loading({
-          message: "加载中...",
-          forbidClick: false,
-          loadingType: "spinner",
-          duration: 0
-        });
-        const { data: res } = await this.$http.post(
-          "sheetQues/subSingleAnswer",
-          {
-            ansUuid: this.infoForm.ansUuid,
-            sheetUuid: this.infoForm.sheetUuid,
-            quesOrder: this.firstSheet.quesOrder,
-            quesContent: this.firstSheet.quesContent,
-            optOrder: info.optOrder,
-            optScore: info.optScore,
-            optContent: info.optContent
-          }
-        );
-        this.optionProgress = (this.num + 1) * this.divide;
-        this.$toast.clear();
-      } else {
-        if (this.num == 0) {
-          this.btnopen = false;
-        }
-        return this.$toast.fail("请选择选项");
-      }
-      if (this.num != this.sheetLength - 1) {
-        this.num += 1;
-        this.getSheetList();
+      if (this.sheetLength > this.num + 1) {
+        this.nextQu = true;
+        this.btnSubmit = false;
       } else {
         this.nextQu = false;
         this.btnSubmit = true;
       }
+      if (this.num + 1 == this.sheetLength) {
+        this.nextQu = false;
+        this.btnSubmit = true;
+      }
+      if (this.num == 0) {
+        this.optionProgress = 0;
+      } else if (this.num + 1 == this.sheetLength) {
+        this.optionProgress = 100;
+      } else {
+        var divide = 100 / this.sheetLength;
+        this.optionProgress = divide * this.num + 1;
+      }
+    },
+    // 下一题
+    async nextQues(info) {
+      if (!this.isSelectedOption()) {
+        this.$toast("请选择答案");
+        return;
+      }
+      this.submitSheetOption();
+      this.num++;
+      this.updateBtnType();
+    },
+    isSelectedOption() {
+      //判断是否选择答案
+      var selected = false;
+      var optionList = this.sheetList[this.num].option;
+      for (var i = 0; i < optionList.length; i++) {
+        if (optionList[i].selected == 1) {
+          selected = true;
+          break;
+        }
+      }
+      return selected;
     },
     // 上一题
     backTo() {
-      this.num -= 1;
-      if (this.num == 0) {
-        this.btnopen = false;
-        this.optionProgress = 0;
+      this.num--;
+      this.updateBtnType();
+    },
+    async submitSheetOption() {
+      //提交单个题目
+      var questionContent = {};
+      var optOrder = [],
+        optScore = [],
+        optContent = [];
+      var optionList = this.sheetList[this.num].option;
+      for (var i = 0; i < optionList.length; i++) {
+        if (optionList[i].selected == 1) {
+          optOrder.push(optionList[i].optOrder);
+          optScore.push(optionList[i].optScore);
+          optContent.push(optionList[i].optContent);
+        }
       }
-      if (this.num < this.sheetLength) {
-        this.nextQu = true;
-        this.btnSubmit = false;
+      if (this.sheetList[this.num].quesType == 1) {
+        questionContent = {
+          ansUuid: this.infoForm.ansUuid,
+          sheetUuid: this.sheetList[this.num].sheetUuid,
+          quesOrder: this.sheetList[this.num].quesOrder,
+          quesContent: this.sheetList[this.num].quesContent,
+          optOrder: optOrder.join(","),
+          optScore: optScore.join(","),
+          optContent: optContent.join(",")
+        };
+      } else if (this.sheetList[this.num].quesType == 2) {
+        var score = 0;
+        for (var i = 0; i < optScore.length; i++) {
+          score = score + parseInt(optScore[i]);
+        }
+        questionContent = {
+          ansUuid: this.infoForm.ansUuid,
+          sheetUuid: this.sheetList[this.num].sheetUuid,
+          quesOrder: this.sheetList[this.num].quesOrder,
+          quesContent: this.sheetList[this.num].quesContent,
+          optScore: score,
+          optContent: optContent.join(",")
+        };
       }
-      this.$toast.loading({
-        message: "加载中...",
-        forbidClick: false,
-        loadingType: "spinner",
-        duration: 0
-      });
-      this.$toast.clear();
-      this.getSheetList();
-      this.optionProgress = (this.num + 1) * this.divide;
+      const { data: res } = await this.$http.post(
+        "sheetQues/subSingleAnswer",
+        questionContent
+      );
+      console.log(res);
     },
     // 提交
     async btnSave() {
+      if (!this.isSelectedOption()) {
+        this.$toast("请选择答案");
+        return;
+      }
       const { data: res } = await this.$http.post("sheetQues/approve", {
         ansUuid: this.infoForm.ansUuid
       });
+      this.show = true;
+    },
+    // 确定提交跳转
+    writeEnter() {
+      this.$router.push({ path: "testWork" });
     }
   }
 };
@@ -245,5 +317,17 @@ export default {
   width: 40px;
   height: 40px;
   vertical-align: bottom;
+}
+.show {
+  width: 60%;
+  max-width: 600px;
+  border-radius: 8px;
+}
+.loginSuccess {
+  padding: 30px 0;
+}
+.dialogSu {
+  width: 80%;
+  max-width: 600px;
 }
 </style>

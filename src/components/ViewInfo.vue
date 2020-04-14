@@ -122,7 +122,9 @@ export default {
     };
   },
   created() {
-    this.loginForm = JSON.parse(this.$route.query.personalList);
+    this.loginForm = JSON.parse(window.localStorage.getItem("infoForm"))
+
+    
   },
   methods: {
     async handleLogin() {
