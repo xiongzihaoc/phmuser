@@ -61,10 +61,12 @@
             <img class="aImg" v-bind:src="item.descriptionImg" />
           </div>
         </div>
-        <div class="row mt40">
+        <div class="row mt40" v-if="this.sheetList[num]">
           <div class="col-xs-12 col-md-4 tips">
             <span class="red">请注意：</span>
-            <span class="gray" id="tips">单选题，请选择！</span>
+            <span class="gray" id="tips" v-if="this.sheetList[num].quesType == 1">单选题，请选择！</span>
+            <span class="gray" id="tips" v-if="this.sheetList[num].quesType == 2">多选题，请选择！</span>
+            <span class="gray" id="tips" v-if="this.sheetList[num].quesType == 3">文本题 ！</span>
           </div>
           <div class="col-xs-12 col-md-8 text-right">
             <a
@@ -126,8 +128,6 @@ export default {
   },
   created() {
     this.infoForm = JSON.parse(window.localStorage.getItem("info"));
-    console.log(this.infoForm);
-
     this.getSheetList();
   },
   methods: {

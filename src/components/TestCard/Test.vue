@@ -1,4 +1,5 @@
 <template>
+
 <body class="ubg2">
   <!-- 公用头部组件 -->
   <Header></Header>
