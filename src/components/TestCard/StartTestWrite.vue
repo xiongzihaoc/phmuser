@@ -10,7 +10,7 @@
       </div>
       <div class="col-xs-6 col-md-6">
         <div class="tou text-right">
-          <a href="javascript:;" id="questionGoBack" class="green">
+          <a href="javascript:;history.back()" id="questionGoBack" class="green">
             返回
             <i class="ic ic-arr-right"></i>
           </a>
@@ -42,7 +42,7 @@
       </div>
 
       <div class="pd2">
-        <div id="quizBox" class="clearfix" style="min-height: 100px">
+        <div id="quizBox" class="clearfix" style="min-height: 100px" v-if="this.sheetList[num]">
           <!-- 题目标题 -->
           <div
             class="a-title mb20 clearfix"
@@ -126,6 +126,8 @@ export default {
   },
   created() {
     this.infoForm = JSON.parse(window.localStorage.getItem("info"));
+    console.log(this.infoForm);
+
     this.getSheetList();
   },
   methods: {
@@ -281,8 +283,14 @@ export default {
         return;
       }
       const { data: res } = await this.$http.post("sheetQues/approve", {
-        ansUuid: this.infoForm.ansUuid
+        ansUuid: this.infoForm.ansUuid,
+        sheetUuid: this.infoForm.sheetUuid
       });
+      if (res.code != 200) {
+        return this.$toast("错误");
+      } else {
+        this.show = true;
+      }
     },
     // 确定提交跳转
     writeEnter() {
