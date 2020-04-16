@@ -76,7 +76,10 @@ export default {
         this.personalList = res.data;
         console.log(this.personalList);
         window.localStorage.setItem("order", this.loginForm.cardNumber);
-        window.localStorage.setItem("infoForm", JSON.stringify(this.personalList));
+        window.localStorage.setItem(
+          "infoForm",
+          JSON.stringify(this.personalList)
+        );
         this.show = true;
       });
     },

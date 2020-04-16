@@ -252,7 +252,7 @@ export default {
           ansUuid: this.infoForm.ansUuid,
           sheetUuid: this.sheetList[this.num].sheetUuid,
           quesOrder: this.sheetList[this.num].quesOrder,
-          quesContent: this.sheetList[this.num].quesContent,
+          quesContent: this.sheetList[this.num].quesMedia,
           optOrder: optOrder.join(","),
           optScore: optScore.join(","),
           optContent: optContent.join(",")
@@ -266,7 +266,7 @@ export default {
           ansUuid: this.infoForm.ansUuid,
           sheetUuid: this.sheetList[this.num].sheetUuid,
           quesOrder: this.sheetList[this.num].quesOrder,
-          quesContent: this.sheetList[this.num].quesContent,
+          quesContent: this.sheetList[this.num].quesMedia,
           optScore: score,
           optContent: optContent.join(",")
         };

@@ -122,9 +122,7 @@ export default {
     };
   },
   created() {
-    this.loginForm = JSON.parse(window.localStorage.getItem("infoForm"))
-
-    
+    this.loginForm = JSON.parse(window.localStorage.getItem("infoForm"));
   },
   methods: {
     async handleLogin() {
@@ -138,7 +136,8 @@ export default {
           job: this.loginForm.job,
           marriage: this.loginForm.marriage,
           edu: this.loginForm.edu,
-          hasConfirm: "1"
+          hasConfirm: "1",
+          state: "1"
         });
         this.show = true;
       } else {
@@ -151,7 +150,8 @@ export default {
           job: this.loginForm.job,
           marriage: this.loginForm.marriage,
           edu: this.loginForm.edu,
-          hasConfirm: "1"
+          hasConfirm: "1",
+          state: "1"
         });
         this.$router.push("testReport");
       }

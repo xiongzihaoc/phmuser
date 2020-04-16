@@ -78,7 +78,8 @@
             type="button"
             class="btn btn-success pdlr30 btn-submit"
             id="testSubmit"
-            disabled="disabled"
+            :disabled="disabled"
+            @click="saveAnsBtn"
           >提交答案</button>
         </div>
       </div>
@@ -96,7 +97,8 @@ export default {
       order: "",
       Continue: false,
       over: false,
-      start: true
+      start: true,
+      disabled: false
     };
   },
   created() {
@@ -106,10 +108,8 @@ export default {
   methods: {
     async getCarfInfoList() {
       const { data: res } = await this.$http.post("checkList/getPackage", {
-        orderNo: this.order
+        orderNo: this.order.trim()
       });
-      console.log(res);
-
       this.taoCanList = res.data;
     },
     jumpStart(info) {
@@ -117,6 +117,13 @@ export default {
       this.$router.push({
         path: "StartTset"
       });
+    },
+    async saveAnsBtn() {
+      const { data: res } = await this.$http.post("checkList/approvePackage", {
+        orderNo: this.order.trim()
+      });
+      if (res.code != 200) return this.toast("还有量表未做完");
+      this.disabled = true;
     },
     // 转换时间格式
     timesChangeDate(times) {
