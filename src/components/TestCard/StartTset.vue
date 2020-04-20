@@ -20,7 +20,7 @@
       </div>
       <div class="pd2 guide">
         <div id="guideBox" class="guide-txt" style="min-height: 100px">
-          <p>{{this.infoForm.instruction}}</p>
+          <p>{{instr}}</p>
         </div>
         <div class="text-center padd">
           <a
@@ -41,16 +41,27 @@ export default {
   components: { Header },
   data() {
     return {
-      infoForm: {}
+      instr: "",
+      sheetUuid: "",
+      name: "",
+      ansUuid: ""
     };
   },
   created() {
-    this.infoForm = JSON.parse(window.localStorage.getItem("info"));;
+    this.instr = this.$route.query.instruction;
+    this.sheetUuid = this.$route.query.sheetId;
+    this.name = this.$route.query.name;
+    this.ansUuid = this.$route.query.ansUuid;
   },
   methods: {
     startTest() {
       this.$router.push({
-        path: "StartTestWrite"
+        path: "StartTestWrite",
+        query: {
+          sheetUuid: this.sheetUuid,
+          name: this.name,
+          ansUuid: this.ansUuid
+        }
       });
     }
   }

@@ -74,7 +74,7 @@ export default {
         if (res.code != 200 || res.data == null)
           return this.$toast.fail("卡号不存在");
         this.personalList = res.data;
-        console.log(this.personalList);
+        console.log(res.data);
         window.localStorage.setItem("order", this.loginForm.cardNumber);
         window.localStorage.setItem(
           "infoForm",

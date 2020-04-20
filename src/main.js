@@ -1,6 +1,8 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
+import NProgress from 'nprogress'
+import 'nprogress/nprogress.css'
 import './plugins/element.js'
 import 'element-ui/lib/theme-chalk/index.css'
 import jquery from 'jquery'
@@ -10,6 +12,7 @@ import './css/main.css'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant)
+//导入
 // 导入axios
 import axios from 'axios'
 
@@ -17,7 +20,7 @@ import axios from 'axios'
 axios.defaults.baseURL = 'http://192.168.0.142:8086/zhuoya-sheet/'
 // axios请求拦截器
 axios.interceptors.request.use(function (config) {
-  // Nprogress.start()
+  NProgress.start()
   config.headers.Authorization = window.sessionStorage.getItem('token')
   return config
 }, function (error) {
@@ -26,7 +29,7 @@ axios.interceptors.request.use(function (config) {
 // axios响应拦截器
 axios.interceptors.response.use(function (config) {
   if (config.status != 200) return this.$message.error('服务器异常')
-  // Nprogress.done()
+  NProgress.done()
   return config;
 }, function (error) {
   console.log(error)

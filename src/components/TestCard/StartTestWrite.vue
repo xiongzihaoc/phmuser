@@ -19,7 +19,7 @@
     </div>
     <div class="test-answer">
       <div class="pd2">
-        <h2 id="sheetName" data-id="368">{{infoForm.name}}</h2>
+        <h2 id="sheetName" data-id="368">{{this.$route.query.name}}</h2>
       </div>
       <div class="pd2">
         <div class="row3" style>
@@ -115,7 +115,6 @@ export default {
   components: { Header },
   data() {
     return {
-      infoForm: {},
       sheetList: [],
       sheetLength: null,
       optionProgress: 0,
@@ -127,17 +126,16 @@ export default {
     };
   },
   created() {
-    this.infoForm = JSON.parse(window.localStorage.getItem("info"));
     this.getSheetList();
   },
   methods: {
     // 获取量表题目列表
     async getSheetList() {
       const { data: res } = await this.$http.post("sheetQues/list", {
-        sheetUuid: this.infoForm.sheetUuid,
-        ansUuid: this.infoForm.ansUuid
+        sheetUuid: this.$route.query.sheetUuid
       });
       console.log(res);
+
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
       for (var i = 0; i < this.sheetList.length; i++) {
@@ -249,7 +247,7 @@ export default {
       }
       if (this.sheetList[this.num].quesType == 1) {
         questionContent = {
-          ansUuid: this.infoForm.ansUuid,
+          ansUuid: this.$route.query.ansUuid,
           sheetUuid: this.sheetList[this.num].sheetUuid,
           quesOrder: this.sheetList[this.num].quesOrder,
           quesContent: this.sheetList[this.num].quesMedia,
@@ -263,7 +261,7 @@ export default {
           score = score + parseInt(optScore[i]);
         }
         questionContent = {
-          ansUuid: this.infoForm.ansUuid,
+          ansUuid: this.$route.query.ansUuid,
           sheetUuid: this.sheetList[this.num].sheetUuid,
           quesOrder: this.sheetList[this.num].quesOrder,
           quesContent: this.sheetList[this.num].quesMedia,
@@ -283,8 +281,8 @@ export default {
         return;
       }
       const { data: res } = await this.$http.post("sheetQues/approve", {
-        ansUuid: this.infoForm.ansUuid,
-        sheetUuid: this.infoForm.sheetUuid
+        ansUuid: this.$route.query.ansUuid,
+        sheetUuid: this.$route.query.sheetUuid
       });
       if (res.code != 200) {
         return this.$toast("错误");
@@ -295,6 +293,7 @@ export default {
     // 确定提交跳转
     writeEnter() {
       this.$router.push({ path: "testWork" });
+      window.location.reload()
     }
   }
 };

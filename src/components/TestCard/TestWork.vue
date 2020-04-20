@@ -1,8 +1,9 @@
 <template>
 <div>
+
   <body class="ubg2">
     <!-- 公用头部组件 -->
-    <Header></Header>
+  <Header></Header>
     <div class="container">
       <!--套餐量表列表-->
       <div id="testlist" class="list__box">
@@ -79,7 +80,7 @@
             class="btn btn-success pdlr30 btn-submit"
             id="testSubmit"
             :disabled="disabled"
-            @click="saveAnsBtn"
+            @click.prevent.stop="saveAnsBtn"
           >提交答案</button>
         </div>
       </div>
@@ -108,19 +109,24 @@ export default {
   methods: {
     async getCarfInfoList() {
       const { data: res } = await this.$http.post("checkList/getPackage", {
-        orderNo: this.order.trim()
+        orderNo: this.order
       });
       this.taoCanList = res.data;
     },
     jumpStart(info) {
-      window.localStorage.setItem("info", JSON.stringify(info));
       this.$router.push({
-        path: "StartTset"
+        path: "StartTset",
+        query: {
+          sheetId: info.sheetUuid,
+          instruction: info.instruction,
+          ansUuid: info.ansUuid,
+          name: info.name
+        }
       });
     },
     async saveAnsBtn() {
       const { data: res } = await this.$http.post("checkList/approvePackage", {
-        orderNo: this.order.trim()
+        orderNo: this.order
       });
       if (res.code != 200) return this.toast("还有量表未做完");
       this.disabled = true;
