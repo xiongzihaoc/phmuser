@@ -1,9 +1,8 @@
 <template>
-<div>
-
-  <body class="ubg2">
+<div style="height:100%">
+  <body class="ubg2" style="height:100%">
     <!-- 公用头部组件 -->
-  <Header></Header>
+    <Header></Header>
     <div class="container">
       <!--套餐量表列表-->
       <div id="testlist" class="list__box">
@@ -31,13 +30,27 @@
                     <p>{{subItem.instruction}}</p>
                   </div>
                   <div class="row">
-                    <div style="margin-bottom:5px;" class="col-xs-6 col-md-4">检测单位：{{subItem.dept}}</div>
-                    <div style="margin-bottom:5px;" class="col-xs-6 col-md-3">卡号：{{order}}</div>
+                    <div style="margin-bottom:5px;" class="col-xs-6 col-md-3">检测单位：{{subItem.dept}}</div>
+                    <div style="margin-bottom:5px;" class="col-xs-6 col-md-4">卡号：{{order}}</div>
                     <div
                       style="margin-bottom:5px;"
                       class="col-xs-6 col-md-3"
                     >开卡时间：{{timesChangeDate(subItem.createTime)}}</div>
-                    <div style="margin-bottom:5px;" class="col-xs-6 col-md-2">状态：未完成</div>
+                    <div
+                      style="margin-bottom:5px;"
+                      class="col-xs-6 col-md-2"
+                      v-if="subItem.state == 0"
+                    >状态：未完成</div>
+                    <div
+                      style="margin-bottom:5px;"
+                      class="col-xs-6 col-md-2"
+                      v-if="subItem.state == 1"
+                    >状态：未完成</div>
+                    <div
+                      style="margin-bottom:5px;"
+                      class="col-xs-6 col-md-2"
+                      v-if="subItem.state == 2"
+                    >状态：已完成</div>
                   </div>
                 </div>
                 <div class="col-xs-12 col-md-2 text-center">
