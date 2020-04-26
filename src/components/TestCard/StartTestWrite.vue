@@ -10,7 +10,7 @@
       </div>
       <div class="col-xs-6 col-md-6">
         <div class="tou text-right">
-          <a href="javascript:;history.back()" id="questionGoBack" class="green">
+          <a href="javascript:;" id="questionGoBack" class="green" @click.prevent.stop="backStart">
             返回
             <i class="ic ic-arr-right"></i>
           </a>
@@ -232,6 +232,8 @@ export default {
       this.updateBtnType();
     },
     async submitSheetOption() {
+      console.log(this.sheetList[this.num].quesType);
+
       //提交单个题目
       var questionContent = {};
       var optOrder = [],
@@ -255,7 +257,15 @@ export default {
           optScore: optScore.join(","),
           optContent: optContent.join(",")
         };
-      } else if (this.sheetList[this.num].quesType == 2) {
+        const { data: res } = await this.$http.post(
+          "sheetQues/subSingleAnswer",
+          questionContent
+        );
+        if (res.code != 200) return this.$toast("提交单题答案失败");
+      } else if (
+        this.sheetList[this.num].quesType == 4 ||
+        this.sheetList[this.num].quesType == 2
+      ) {
         var score = 0;
         for (var i = 0; i < optScore.length; i++) {
           score = score + parseInt(optScore[i]);
@@ -268,11 +278,12 @@ export default {
           optScore: score,
           optContent: optContent.join(",")
         };
+        const { data: res } = await this.$http.post(
+          "sheetQues/subSingleAnswer",
+          questionContent
+        );
+        if (res.code != 200) return this.$toast("提交单题答案失败");
       }
-      const { data: res } = await this.$http.post(
-        "sheetQues/subSingleAnswer",
-        questionContent
-      );
     },
     // 提交
     async btnSave() {
@@ -293,8 +304,10 @@ export default {
     // 确定提交跳转
     writeEnter() {
       this.$router.push({ path: "testWork" });
-      window.location.reload()
-    }
+      window.location.reload();
+    },
+    // 返回跳转到开始答题页面
+    backStart(){},
   }
 };
 </script>

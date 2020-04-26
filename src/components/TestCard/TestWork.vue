@@ -124,6 +124,7 @@ export default {
       const { data: res } = await this.$http.post("checkList/getPackage", {
         orderNo: this.order
       });
+      console.log(res);
       this.taoCanList = res.data;
     },
     jumpStart(info) {

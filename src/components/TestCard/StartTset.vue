@@ -55,7 +55,7 @@ export default {
   },
   methods: {
     startTest() {
-      this.$router.push({
+      this.$router.replace({
         path: "StartTestWrite",
         query: {
           sheetUuid: this.sheetUuid,
