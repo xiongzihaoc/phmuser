@@ -17,7 +17,7 @@ Vue.use(Vant)
 import axios from 'axios'
 
 // // 配置axios
-axios.defaults.baseURL = 'http://192.168.0.142:8086/zhuoya-sheet/'
+axios.defaults.baseURL = 'http://192.168.0.130:8086/zhuoya-sheet/'
 // axios请求拦截器
 axios.interceptors.request.use(function (config) {
   NProgress.start()

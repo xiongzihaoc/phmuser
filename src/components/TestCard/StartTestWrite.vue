@@ -155,7 +155,6 @@ export default {
       this.updateBtnType();
     },
     radioCheck(item, index) {
-      console.log(item);
       if (this.sheetLength >= this.num + 1) {
         if (this.sheetList[this.num].quesType == 1) {
           var optionList = this.sheetList[this.num].option;
@@ -232,19 +231,23 @@ export default {
       this.updateBtnType();
     },
     async submitSheetOption() {
-      console.log(this.sheetList[this.num].quesType);
+      // console.log(this.sheetList[this.num].quesType);
 
       //提交单个题目
       var questionContent = {};
       var optOrder = [],
         optScore = [],
-        optContent = [];
+        optContent = [],
+        optLabel = "";
       var optionList = this.sheetList[this.num].option;
+      console.log(optionList);
+
       for (var i = 0; i < optionList.length; i++) {
         if (optionList[i].selected == 1) {
           optOrder.push(optionList[i].optOrder);
           optScore.push(optionList[i].optScore);
           optContent.push(optionList[i].optContent);
+          optLabel = optionList[i].optLabel;
         }
       }
       if (this.sheetList[this.num].quesType == 1) {
@@ -255,7 +258,8 @@ export default {
           quesContent: this.sheetList[this.num].quesMedia,
           optOrder: optOrder.join(","),
           optScore: optScore.join(","),
-          optContent: optContent.join(",")
+          optContent: optContent.join(","),
+          optLabel: optLabel
         };
         const { data: res } = await this.$http.post(
           "sheetQues/subSingleAnswer",
@@ -276,12 +280,15 @@ export default {
           quesOrder: this.sheetList[this.num].quesOrder,
           quesContent: this.sheetList[this.num].quesMedia,
           optScore: score,
-          optContent: optContent.join(",")
+          optContent: optContent.join(","),
+          optLabel: optLabel
         };
         const { data: res } = await this.$http.post(
           "sheetQues/subSingleAnswer",
           questionContent
         );
+        console.log(res);
+
         if (res.code != 200) return this.$toast("提交单题答案失败");
       }
     },
@@ -307,7 +314,7 @@ export default {
       window.location.reload();
     },
     // 返回跳转到开始答题页面
-    backStart(){},
+    backStart() {}
   }
 };
 </script>
