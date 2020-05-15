@@ -92,7 +92,14 @@
             type="button"
             class="btn btn-success pdlr30 btn-submit"
             id="testSubmit"
-            :disabled="disabled"
+            v-if="this.infoForm.state == 3"
+            disabled
+          >提交答案</button>
+          <button
+            type="button"
+            class="btn btn-success pdlr30 btn-submit"
+            id="testSubmit"
+            v-else
             @click.prevent.stop="saveAnsBtn"
           >提交答案</button>
         </div>
@@ -111,12 +118,13 @@ export default {
       order: "",
       Continue: false,
       over: false,
-      start: true,
-      disabled: false
+      infoForm: {},
+      start: true
     };
   },
   created() {
     this.order = window.localStorage.getItem("order");
+    this.infoForm = JSON.parse(window.localStorage.getItem("infoForm"));
     this.getCarfInfoList();
   },
   methods: {
@@ -124,7 +132,6 @@ export default {
       const { data: res } = await this.$http.post("checkList/getPackage", {
         orderNo: this.order
       });
-      console.log(res);
       this.taoCanList = res.data;
     },
     jumpStart(info) {
@@ -142,8 +149,8 @@ export default {
       const { data: res } = await this.$http.post("checkList/approvePackage", {
         orderNo: this.order
       });
-      if (res.code != 200) return this.toast("还有量表未做完");
-      this.disabled = true;
+      console.log(res);
+      if (res.code != 200) return this.$toast("还有量表未做完");
     },
     // 转换时间格式
     timesChangeDate(times) {

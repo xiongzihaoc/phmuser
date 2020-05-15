@@ -63,6 +63,7 @@ export default {
           ansUuid: this.ansUuid
         }
       });
+      window.reload(true)
     }
   }
 };

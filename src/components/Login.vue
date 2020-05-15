@@ -61,7 +61,8 @@ export default {
         cardNumber: [{ required: true, message: "请输入卡号", trigger: "blur" }]
       },
       show: false,
-      personalList: {}
+      personalList: {},
+      Num: ""
     };
   },
   methods: {
@@ -74,7 +75,7 @@ export default {
         if (res.code != 200 || res.data == null)
           return this.$toast.fail("卡号不存在");
         this.personalList = res.data;
-        console.log(res.data);
+        this.Num = res.data.hasConfirm;
         window.localStorage.setItem("order", this.loginForm.cardNumber);
         window.localStorage.setItem(
           "infoForm",
@@ -84,9 +85,15 @@ export default {
       });
     },
     loginEnter() {
-      this.$router.push({
-        path: "/lookInfo"
-      });
+      if (this.Num == 0) {
+        this.$router.push({
+          path: "/lookInfo"
+        });
+      } else {
+        this.$router.push({
+          path: "/testReport"
+        });
+      }
     }
   }
 };

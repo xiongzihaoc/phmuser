@@ -64,9 +64,9 @@
         <div class="row mt40" v-if="this.sheetList[num]">
           <div class="col-xs-12 col-md-4 tips">
             <span class="red">请注意：</span>
-            <span class="gray" id="tips" v-if="this.sheetList[num].quesType == 1">单选题，请选择！</span>
-            <span class="gray" id="tips" v-if="this.sheetList[num].quesType == 2">多选题，请选择！</span>
-            <span class="gray" id="tips" v-if="this.sheetList[num].quesType == 3">文本题 ！</span>
+            <span class="gray" id="tips" v-show="this.sheetList[num].quesType == 1">单选题，请选择！</span>
+            <span class="gray" id="tips" v-show="this.sheetList[num].quesType == 2">多选题，请选择！</span>
+            <span class="gray" id="tips" v-show="this.sheetList[num].quesType == 3">文本题 ！</span>
           </div>
           <div class="col-xs-12 col-md-8 text-right">
             <a
@@ -134,8 +134,6 @@ export default {
       const { data: res } = await this.$http.post("sheetQues/list", {
         sheetUuid: this.$route.query.sheetUuid
       });
-      console.log(res);
-
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
       for (var i = 0; i < this.sheetList.length; i++) {
@@ -147,6 +145,7 @@ export default {
             break;
           }
         }
+
         if (!isSelected) {
           this.num = i;
           break;
@@ -310,8 +309,7 @@ export default {
     },
     // 确定提交跳转
     writeEnter() {
-      this.$router.push({ path: "testWork" });
-      window.location.reload();
+      this.$router.replace({ path: "testWork" });
     },
     // 返回跳转到开始答题页面
     backStart() {}
