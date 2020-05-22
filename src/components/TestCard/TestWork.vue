@@ -149,8 +149,11 @@ export default {
       const { data: res } = await this.$http.post("checkList/approvePackage", {
         orderNo: this.order
       });
-      console.log(res);
-      if (res.code != 200) return this.$toast("还有量表未做完");
+      if (res.code == 500) {
+        return this.$toast(res.data);
+      } else if (res.code != 200 && res.code != 500) {
+        return this.$toast("请完成所有量表");
+      }
     },
     // 转换时间格式
     timesChangeDate(times) {
