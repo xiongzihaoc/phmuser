@@ -13,6 +13,18 @@
       label-width="80px"
       label-position="left"
     >
+      <el-form-item label="部门" prop="dept">
+        <el-input v-model="dept" placeholder="请选择部门" type="text" readonly @focus="showDept" />
+        <VuePicker
+          :layer="2"
+          :data="deptDate"
+          @cancel="cancel"
+          @confirm="confirm"
+          :showToolbar="true"
+          :maskClick="true"
+          :visible.sync="pickerVisible"
+        ></VuePicker>
+      </el-form-item>
       <el-form-item label="姓名" prop="name">
         <el-input ref="name" v-model="loginForm.name" placeholder="请输入姓名" type="text" />
       </el-form-item>
@@ -72,7 +84,11 @@
 </template>
 <script>
 import { timesChangeDate } from "../../assets/js/changeTime";
+import VuePicker from "vue-pickers";
 export default {
+  components: {
+    VuePicker
+  },
   data() {
     // 手机验证规则
     var checkMobile = (rule, value, cb) => {
@@ -86,6 +102,7 @@ export default {
       timesChangeDate,
       // 表单检验规则
       Addrules: {
+        dept: [{ required: true, message: "请选择部门", trigger: "blur" }],
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" }
@@ -121,6 +138,7 @@ export default {
         { id: 4, name: "初中" },
         { id: 5, name: "其他" }
       ],
+      dept: "",
       loginForm: {
         name: "",
         sex: "",
@@ -136,7 +154,75 @@ export default {
       currentDate: new Date(),
       minDate: new Date(1930, 0, 1),
       maxDate: new Date(2100, 0, 1),
-      show: false // 用来显示弹出层
+      show: false, // 用来显示弹出层
+      //   测试数据
+      pickerVisible: false,
+      deptDate: [
+        {
+          label: "南山",
+          value: "ns",
+          children: [
+            {
+              label: "四海公园",
+              value: "shgy"
+            },
+            {
+              label: "中山公园",
+              value: "zsgy"
+            },
+            {
+              label: "荔香公园",
+              value: "lxgy"
+            },
+            {
+              label: "大南山公园",
+              value: "dngy"
+            },
+            {
+              label: "深圳湾公园",
+              value: "shwgy"
+            }
+          ]
+        },
+        {
+          label: "福田",
+          value: "ft",
+          children: [
+            {
+              label: "中心公园",
+              value: "zxgy"
+            },
+            {
+              label: "荔枝公园",
+              value: "lzgy"
+            },
+            {
+              label: "莲花山公园",
+              value: "lhgy"
+            },
+            {
+              label: "笔架山公园",
+              value: "bjsgy"
+            },
+            {
+              label: "梅林公园",
+              value: "mlgy"
+            },
+            {
+              label: "皇岗公园",
+              value: "wggy"
+            },
+            {
+              label: "红树林公园",
+              value: "hslgy"
+            },
+            {
+              label: "园博园",
+              value: "ybygy"
+            }
+          ]
+        }
+      ]
     };
   },
   created() {},
@@ -161,6 +247,9 @@ export default {
         //   this.Isshow = true;
       });
     },
+    saveEnter() {
+      this.$router.push("testReport");
+    },
     // 选择日期
     showPopFn() {
       this.show = true;
@@ -174,8 +263,16 @@ export default {
     cancelFn() {
       this.show = true;
     },
-    saveEnter() {
-      this.$router.push("testReport");
+    // 选择部门区域方法
+    showDept() {
+      this.pickerVisible = true;
+    },
+    cancel() {
+      console.log("cancel");
+    },
+    confirm(res) {
+      console.log(res[1].label);
+
     }
   },
   mounted() {

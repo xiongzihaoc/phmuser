@@ -407,12 +407,12 @@ a.btn-danger { color: #ffffff !important; }
     vertical-align: middle;
 }
 
-.content {
+/* .content {
     border: 1px dashed #007AFF;
     padding: 10px;
     border-radius: 5px;
     margin-top: 20px;
-}
+} */
 .checkimg {
     width: 65%;
 }
