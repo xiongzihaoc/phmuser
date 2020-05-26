@@ -110,10 +110,12 @@
 </template>
 <script>
 import Header from "../common/header";
+import { timesChangeDate } from "../../assets/js/changeTime";
 export default {
   components: { Header },
   data() {
     return {
+      timesChangeDate,
       taoCanList: [],
       order: "",
       Continue: false,
@@ -155,20 +157,7 @@ export default {
         return this.$toast("请完成所有量表");
       }
     },
-    // 转换时间格式
-    timesChangeDate(times) {
-      var date = new Date(times);
-      var y = date.getFullYear();
-      var mon = date.getMonth() + 1;
-      var d = date.getDate();
-      if (mon < 10) {
-        mon = "0" + mon;
-      }
-      if (d < 10) {
-        d = "0" + d;
-      }
-      return `${y}-${mon}-${d}`;
-    }
+
   }
 };
 </script>

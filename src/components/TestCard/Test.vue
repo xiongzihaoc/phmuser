@@ -25,7 +25,7 @@
 </body>
 </template>
 <script>
-import Header from "../common/header";123467890
+import Header from "../common/header";
 export default {
   components: { Header },
   data() {

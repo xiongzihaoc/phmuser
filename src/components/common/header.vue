@@ -2,7 +2,7 @@
   <div>
     <div class="header">
       <div class="container">
-        <div class="row2">
+        <div class="row6">
           <div class="col-xs-6 col-md-6" id="logo">
             <a href="javascript:;">
               <img src="../../images/logo.png" />
@@ -28,4 +28,7 @@ export default {
 };
 </script>
 <style lang='less' scoped>
+.row6 {
+  display: flex;
+}
 </style>

@@ -14,8 +14,13 @@ const routes = [{
   },
   {
     path: '/lookInfo',
-    name: 'ViewInfo',
+    name: 'lookInfo',
     component: () => import('@/components/ViewInfo.vue'),
+  },
+  {
+    path: '/lookTeamInfo',
+    name: 'lookTeamInfo',
+    component: () => import('@/components/TeamTestCard/TeamInfo.vue'),
   },
   {
     path: '/testReport',

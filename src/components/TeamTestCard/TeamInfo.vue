@@ -1,7 +1,7 @@
 <template>
 <body>
   <header>
-    <img src="../images/logo.png" alt />
+    <img src="../../images/logo.png" alt />
   </header>
   <div class="infoBox">
     <h2 style="margin-bottom:20px;">基本信息</h2>
@@ -17,28 +17,11 @@
         <el-input ref="name" v-model="loginForm.name" placeholder="请输入姓名" type="text" />
       </el-form-item>
       <el-form-item label="电话" prop="phone">
-        <el-input
-          ref="phone"
-          :disabled="true"
-          v-model="loginForm.phone"
-          placeholder="请输入电话"
-          type="text"
-        />
+        <el-input ref="phone" v-model="loginForm.phone" placeholder="请输入电话" type="text" />
       </el-form-item>
-      <!-- 出生年月 -->
       <el-form-item label="出生年月" prop="birth" style="wdith:100%">
-        <el-input v-model="loginForm.birth" placeholder="选择日期" @focus="showPopFn()" readonly></el-input>
-        <van-popup v-model="show" position="bottom" :style="{ height: '40%' }">
-          <van-datetime-picker
-            v-model="currentDate"
-            type="date"
-            @change="changeFn()"
-            @confirm="confirmFn()"
-            @cancel="cancelFn()"
-          />
-        </van-popup>
+        <el-date-picker v-model="loginForm.birth" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
       </el-form-item>
-      <!-- sex -->
       <el-form-item label="性别" prop="sex">
         <el-select v-model="loginForm.sex" placeholder="请选择性别" style="width:100%">
           <el-option label="男" value="男"></el-option>
@@ -65,24 +48,24 @@
         class="loginBtn"
         type="danger"
         @click.native.prevent="handleLogin"
-        @confirm="saveEnter"
       >保 存</el-button>
     </el-form>
   </div>
-  <van-dialog
+
+  <!-- <van-dialog
     class="dialogSu"
     :showCancelButton="false"
-    v-model="Isshow"
+    v-model="show"
     title="提示"
     show-cancel-button
     @confirm="saveEnter"
   >
     <p class="loginSuccess" style="text-align:center">保存成功</p>
-  </van-dialog>
+  </van-dialog> -->
 </body>
 </template>
 <script>
-import { timesChangeDate } from "../assets/js/changeTime";
+import { timesChangeDate } from "../../assets/js/changeTime";
 export default {
   data() {
     return {
@@ -130,21 +113,16 @@ export default {
         birth: "",
         hasConfirm: ""
       },
-      Isshow: false,
-      currentDate: new Date(),
-      changeDate: new Date(),
-      show: false // 用来显示弹出层
+      show: false
     };
   },
   created() {
-    this.loginForm = JSON.parse(window.localStorage.getItem("infoForm"));
-    this.loginForm.birth = this.timesChangeDate(this.loginForm.birth);
   },
   methods: {
     async handleLogin() {
-      if (this.loginForm.hasConfirm == 0) {
-        const { data: res } = await this.$http.post("checkList/update", {
-          id: this.loginForm.id,
+      const { data: res } = await this.$http.post("teamList/addMember", {
+        id: this.loginForm.id,
+        patient: {
           name: this.loginForm.name,
           phone: this.loginForm.phone,
           sex: this.loginForm.sex,
@@ -152,49 +130,15 @@ export default {
           job: this.loginForm.job,
           marriage: this.loginForm.marriage,
           edu: this.loginForm.edu,
-          hasConfirm: "1",
           state: "1"
-        });
-        this.Isshow = true;
-      } else {
-        const { data: res } = await this.$http.post("checkList/update", {
-          name: this.loginForm.name,
-          id: this.loginForm.id,
-          phone: this.loginForm.phone,
-          sex: this.loginForm.sex,
-          birth: this.timesChangeDate(this.loginForm.birth),
-          job: this.loginForm.job,
-          marriage: this.loginForm.marriage,
-          edu: this.loginForm.edu,
-          hasConfirm: "1",
-          state: "1"
-        });
-        this.$router.push("testReport");
-      }
-    },
-    // 选择日期
-    showPopFn() {
+        }
+      });
       this.show = true;
-    },
-    changeFn() {
-      this.changeDate = this.currentDate; // Tue Sep 08 2020 00:00:00 GMT+0800 (中国标准时间)
-    },
-    confirmFn() {
-      // 确定按钮
-      this.loginForm.birth = this.timesChangeDate(this.currentDate);
-      this.show = false;
-    },
-    // 关闭按钮
-    cancelFn() {
-      this.show = true;
-    },
-    saveEnter() {
-      this.$router.push("testReport");
     }
   },
-  mounted() {
-    this.timesChangeDate(new Date());
-  }
+//   saveEnter() {
+//     this.$router.push("testReport");
+//   }
 };
 </script>
 <style>
@@ -205,7 +149,7 @@ header {
 }
 body {
   height: 100%;
-  background: #0088b3 url("../images/nbg.png") no-repeat bottom center;
+  background: #0088b3 url("../../images/nbg.png") no-repeat bottom center;
   background-size: contain;
 }
 .infoBox {

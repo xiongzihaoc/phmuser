@@ -12,10 +12,8 @@ import './css/main.css'
 import Vant from 'vant';
 import 'vant/lib/index.css';
 Vue.use(Vant)
-//导入
 // 导入axios
 import axios from 'axios'
-
 // // 配置axios
 axios.defaults.baseURL = 'http://192.168.0.130:8086/zhuoya-sheet/'
 // axios请求拦截器
