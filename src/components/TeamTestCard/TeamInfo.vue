@@ -20,7 +20,17 @@
         <el-input ref="phone" v-model="loginForm.phone" placeholder="请输入电话" type="text" />
       </el-form-item>
       <el-form-item label="出生年月" prop="birth" style="wdith:100%">
-        <el-date-picker v-model="loginForm.birth" type="date" placeholder="选择日期" style="width:100%"></el-date-picker>
+        <el-input v-model="loginForm.birth" placeholder="选择日期" @focus="showPopFn()" readonly></el-input>
+        <van-popup v-model="show" position="bottom" :style="{ height: '40%' }">
+          <van-datetime-picker
+            v-model="currentDate"
+            type="date"
+            :min-date="minDate"
+            :max-date="maxDate"
+            @confirm="confirmFn()"
+            @cancel="cancelFn()"
+          />
+        </van-popup>
       </el-form-item>
       <el-form-item label="性别" prop="sex">
         <el-select v-model="loginForm.sex" placeholder="请选择性别" style="width:100%">
@@ -44,11 +54,7 @@
           <el-option v-for="item in eduList" :key="item.id" :label="item.name" :value="item.name"></el-option>
         </el-select>
       </el-form-item>
-      <el-button
-        class="loginBtn"
-        type="danger"
-        @click.native.prevent="handleLogin"
-      >保 存</el-button>
+      <el-button class="loginBtn" type="danger" @click.native.prevent="handleLogin">保 存</el-button>
     </el-form>
   </div>
 
@@ -61,21 +67,33 @@
     @confirm="saveEnter"
   >
     <p class="loginSuccess" style="text-align:center">保存成功</p>
-  </van-dialog> -->
+  </van-dialog>-->
 </body>
 </template>
 <script>
 import { timesChangeDate } from "../../assets/js/changeTime";
 export default {
   data() {
+    // 手机验证规则
+    var checkMobile = (rule, value, cb) => {
+      const regMoblie = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (regMoblie.test(value)) {
+        return cb();
+      }
+      return cb(new Error("请输入合法的手机号"));
+    };
     return {
       timesChangeDate,
+      // 表单检验规则
       Addrules: {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" }
         ],
-        phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
+        phone: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { validator: checkMobile, trigger: "blur" }
+        ],
         sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         birth: [{ required: true, message: "请选择出生日期", trigger: "blur" }],
         job: [{ required: true, message: "请选择职业", trigger: "blur" }],
@@ -113,32 +131,56 @@ export default {
         birth: "",
         hasConfirm: ""
       },
-      show: false
+      //   Isshow: false,
+      //   时间选择配置
+      currentDate: new Date(),
+      minDate: new Date(1930, 0, 1),
+      maxDate: new Date(2100, 0, 1),
+      show: false // 用来显示弹出层
     };
   },
-  created() {
-  },
+  created() {},
   methods: {
-    async handleLogin() {
-      const { data: res } = await this.$http.post("teamList/addMember", {
-        id: this.loginForm.id,
-        patient: {
-          name: this.loginForm.name,
-          phone: this.loginForm.phone,
-          sex: this.loginForm.sex,
-          birth: this.timesChangeDate(this.loginForm.birth),
-          job: this.loginForm.job,
-          marriage: this.loginForm.marriage,
-          edu: this.loginForm.edu,
-          state: "1"
-        }
+    // 保存
+    handleLogin() {
+      this.$refs.loginFormRef.validate(async valid => {
+        if (!valid) return;
+        const { data: res } = await this.$http.post("teamList/addMember", {
+          id: this.loginForm.id,
+          patient: {
+            name: this.loginForm.name,
+            phone: this.loginForm.phone,
+            sex: this.loginForm.sex,
+            birth: this.timesChangeDate(this.loginForm.birth),
+            job: this.loginForm.job,
+            marriage: this.loginForm.marriage,
+            edu: this.loginForm.edu
+            //   state: "1"
+          }
+        });
+        //   this.Isshow = true;
       });
+    },
+    // 选择日期
+    showPopFn() {
       this.show = true;
+    },
+    // 确定按钮
+    confirmFn() {
+      this.loginForm.birth = this.timesChangeDate(this.currentDate);
+      this.show = false;
+    },
+    // 关闭按钮
+    cancelFn() {
+      this.show = true;
+    },
+    saveEnter() {
+      this.$router.push("testReport");
     }
   },
-//   saveEnter() {
-//     this.$router.push("testReport");
-//   }
+  mounted() {
+    this.timesChangeDate(new Date());
+  }
 };
 </script>
 <style>

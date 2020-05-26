@@ -32,7 +32,8 @@
           <van-datetime-picker
             v-model="currentDate"
             type="date"
-            @change="changeFn()"
+            :min-date="minDate"
+            :max-date="maxDate"
             @confirm="confirmFn()"
             @cancel="cancelFn()"
           />
@@ -85,6 +86,14 @@
 import { timesChangeDate } from "../assets/js/changeTime";
 export default {
   data() {
+    // 手机验证规则
+    var checkMobile = (rule, value, cb) => {
+      const regMoblie = /^(0|86|17951)?(13[0-9]|15[012356789]|17[678]|18[0-9]|14[57])[0-9]{8}$/;
+      if (regMoblie.test(value)) {
+        return cb();
+      }
+      return cb(new Error("请输入合法的手机号"));
+    };
     return {
       timesChangeDate,
       Addrules: {
@@ -92,7 +101,10 @@ export default {
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" }
         ],
-        phone: [{ required: true, message: "请输入手机号码", trigger: "blur" }],
+        phone: [
+          { required: true, message: "请输入手机号码", trigger: "blur" },
+          { validator: checkMobile, trigger: "blur" }
+        ],
         sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         birth: [{ required: true, message: "请选择出生日期", trigger: "blur" }],
         job: [{ required: true, message: "请选择职业", trigger: "blur" }],
@@ -132,7 +144,8 @@ export default {
       },
       Isshow: false,
       currentDate: new Date(),
-      changeDate: new Date(),
+      minDate: new Date(1930, 0, 1),
+      maxDate: new Date(2100, 0, 1),
       show: false // 用来显示弹出层
     };
   },
@@ -141,46 +154,49 @@ export default {
     this.loginForm.birth = this.timesChangeDate(this.loginForm.birth);
   },
   methods: {
-    async handleLogin() {
+    handleLogin() {
       if (this.loginForm.hasConfirm == 0) {
-        const { data: res } = await this.$http.post("checkList/update", {
-          id: this.loginForm.id,
-          name: this.loginForm.name,
-          phone: this.loginForm.phone,
-          sex: this.loginForm.sex,
-          birth: this.timesChangeDate(this.loginForm.birth),
-          job: this.loginForm.job,
-          marriage: this.loginForm.marriage,
-          edu: this.loginForm.edu,
-          hasConfirm: "1",
-          state: "1"
+        this.$refs.loginFormRef.validate(async valid => {
+          if (!valid) return;
+          const { data: res } = await this.$http.post("checkList/update", {
+            id: this.loginForm.id,
+            name: this.loginForm.name,
+            phone: this.loginForm.phone,
+            sex: this.loginForm.sex,
+            birth: this.timesChangeDate(this.loginForm.birth),
+            job: this.loginForm.job,
+            marriage: this.loginForm.marriage,
+            edu: this.loginForm.edu,
+            hasConfirm: "1",
+            state: "1"
+          });
         });
         this.Isshow = true;
       } else {
-        const { data: res } = await this.$http.post("checkList/update", {
-          name: this.loginForm.name,
-          id: this.loginForm.id,
-          phone: this.loginForm.phone,
-          sex: this.loginForm.sex,
-          birth: this.timesChangeDate(this.loginForm.birth),
-          job: this.loginForm.job,
-          marriage: this.loginForm.marriage,
-          edu: this.loginForm.edu,
-          hasConfirm: "1",
-          state: "1"
+        this.$refs.loginFormRef.validate(async valid => {
+          if (!valid) return;
+          const { data: res } = await this.$http.post("checkList/update", {
+            name: this.loginForm.name,
+            id: this.loginForm.id,
+            phone: this.loginForm.phone,
+            sex: this.loginForm.sex,
+            birth: this.timesChangeDate(this.loginForm.birth),
+            job: this.loginForm.job,
+            marriage: this.loginForm.marriage,
+            edu: this.loginForm.edu,
+            hasConfirm: "1",
+            state: "1"
+          });
+          this.$router.push("testReport");
         });
-        this.$router.push("testReport");
       }
     },
     // 选择日期
     showPopFn() {
       this.show = true;
     },
-    changeFn() {
-      this.changeDate = this.currentDate; // Tue Sep 08 2020 00:00:00 GMT+0800 (中国标准时间)
-    },
+    // 确定按钮
     confirmFn() {
-      // 确定按钮
       this.loginForm.birth = this.timesChangeDate(this.currentDate);
       this.show = false;
     },
