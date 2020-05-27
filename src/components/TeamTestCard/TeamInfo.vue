@@ -14,7 +14,13 @@
       label-position="left"
     >
       <el-form-item label="部门" prop="dept">
-        <el-input v-model="dept" placeholder="请选择部门" type="text" readonly @focus="showDept" />
+        <el-input
+          v-model="loginForm.dept"
+          placeholder="请选择部门"
+          type="text"
+          @focus="showDept()"
+          readonly
+        ></el-input>
         <VuePicker
           :layer="2"
           :data="deptDate"
@@ -69,17 +75,6 @@
       <el-button class="loginBtn" type="danger" @click.native.prevent="handleLogin">保 存</el-button>
     </el-form>
   </div>
-
-  <!-- <van-dialog
-    class="dialogSu"
-    :showCancelButton="false"
-    v-model="show"
-    title="提示"
-    show-cancel-button
-    @confirm="saveEnter"
-  >
-    <p class="loginSuccess" style="text-align:center">保存成功</p>
-  </van-dialog>-->
 </body>
 </template>
 <script>
@@ -102,7 +97,10 @@ export default {
       timesChangeDate,
       // 表单检验规则
       Addrules: {
-        dept: [{ required: true, message: "请选择部门", trigger: "blur" }],
+        dept: [
+          { required: true, message: "请选择部门", trigger: "blur" },
+        ],
+
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" }
@@ -138,7 +136,6 @@ export default {
         { id: 4, name: "初中" },
         { id: 5, name: "其他" }
       ],
-      dept: "",
       loginForm: {
         name: "",
         sex: "",
@@ -146,6 +143,8 @@ export default {
         job: "",
         marriage: "",
         edu: "",
+        dept: "",
+        deptValue: "",
         birth: "",
         hasConfirm: ""
       },
@@ -230,21 +229,22 @@ export default {
     // 保存
     handleLogin() {
       this.$refs.loginFormRef.validate(async valid => {
+        console.log(valid);
+
         if (!valid) return;
         const { data: res } = await this.$http.post("teamList/addMember", {
           id: this.loginForm.id,
           patient: {
             name: this.loginForm.name,
+            dept: this.loginForm.deptValue,
             phone: this.loginForm.phone,
             sex: this.loginForm.sex,
             birth: this.timesChangeDate(this.loginForm.birth),
             job: this.loginForm.job,
             marriage: this.loginForm.marriage,
             edu: this.loginForm.edu
-            //   state: "1"
           }
         });
-        //   this.Isshow = true;
       });
     },
     saveEnter() {
@@ -271,8 +271,9 @@ export default {
       console.log("cancel");
     },
     confirm(res) {
-      console.log(res[1].label);
-
+      this.loginForm.dept = res[1].label;
+      this.loginForm.deptValue = res[1].value;
+      //   console.log(res[1].label);
     }
   },
   mounted() {
