@@ -11,9 +11,9 @@
       :rules="Addrules"
       class="login-form"
       label-width="80px"
-      label-position="left"
+      label-position="center"
     >
-      <el-form-item label="部门" prop="dept">
+      <el-form-item label="部  门" prop="dept">
         <el-input
           v-model="loginForm.dept"
           placeholder="请选择部门"
@@ -22,7 +22,7 @@
           readonly
         ></el-input>
         <VuePicker
-          :layer="2"
+          :layer="4"
           :data="deptDate"
           @cancel="cancel"
           @confirm="confirm"
@@ -31,13 +31,13 @@
           :visible.sync="pickerVisible"
         ></VuePicker>
       </el-form-item>
-      <el-form-item label="姓名" prop="name">
+      <el-form-item label="姓  名" prop="name">
         <el-input ref="name" v-model="loginForm.name" placeholder="请输入姓名" type="text" />
       </el-form-item>
-      <el-form-item label="电话" prop="phone">
+      <el-form-item label="电  话" prop="phone">
         <el-input ref="phone" v-model="loginForm.phone" placeholder="请输入电话" type="text" />
       </el-form-item>
-      <el-form-item label="出生年月" prop="birth" style="wdith:100%">
+      <el-form-item label="生  日" prop="birth" style="wdith:100%">
         <el-input v-model="loginForm.birth" placeholder="选择日期" @focus="showPopFn()" readonly></el-input>
         <van-popup v-model="show" position="bottom" :style="{ height: '40%' }">
           <van-datetime-picker
@@ -50,24 +50,24 @@
           />
         </van-popup>
       </el-form-item>
-      <el-form-item label="性别" prop="sex">
+      <el-form-item label="性  别" prop="sex">
         <el-select v-model="loginForm.sex" placeholder="请选择性别" style="width:100%">
           <el-option label="男" value="男"></el-option>
           <el-option label="女" value="女"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="婚姻状况" prop="marriage">
+      <el-form-item label="婚  姻" prop="marriage">
         <el-select v-model="loginForm.marriage" placeholder="请选择" style="width:100%">
           <el-option label="未婚" value="未婚"></el-option>
           <el-option label="已婚" value="已婚"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="职业" prop="job">
+      <el-form-item label="职  业" prop="job">
         <el-select v-model="loginForm.job" placeholder="请选择职业" style="width:100%">
           <el-option v-for="item in jobList" :key="item.id" :label="item.name" :value="item.name"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="文化程度" prop="edu">
+      <el-form-item label="文  化" prop="edu">
         <el-select v-model="loginForm.edu" placeholder="请选择职业" style="width:100%">
           <el-option v-for="item in eduList" :key="item.id" :label="item.name" :value="item.name"></el-option>
         </el-select>
@@ -97,10 +97,7 @@ export default {
       timesChangeDate,
       // 表单检验规则
       Addrules: {
-        dept: [
-          { required: true, message: "请选择部门", trigger: "blur" },
-        ],
-
+        dept: [{ required: true, message: "请选择部门" }],
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" }
@@ -110,7 +107,7 @@ export default {
           { validator: checkMobile, trigger: "blur" }
         ],
         sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
-        birth: [{ required: true, message: "请选择出生日期", trigger: "blur" }],
+        birth: [{ required: true, message: "请选择出生日期" }],
         job: [{ required: true, message: "请选择职业", trigger: "blur" }],
         marriage: [
           { required: true, message: "请选择婚姻状况", trigger: "blur" }
@@ -156,87 +153,29 @@ export default {
       show: false, // 用来显示弹出层
       //   测试数据
       pickerVisible: false,
-      deptDate: [
-        {
-          label: "南山",
-          value: "ns",
-          children: [
-            {
-              label: "四海公园",
-              value: "shgy"
-            },
-            {
-              label: "中山公园",
-              value: "zsgy"
-            },
-            {
-              label: "荔香公园",
-              value: "lxgy"
-            },
-            {
-              label: "大南山公园",
-              value: "dngy"
-            },
-            {
-              label: "深圳湾公园",
-              value: "shwgy"
-            }
-          ]
-        },
-        {
-          label: "福田",
-          value: "ft",
-          children: [
-            {
-              label: "中心公园",
-              value: "zxgy"
-            },
-            {
-              label: "荔枝公园",
-              value: "lzgy"
-            },
-            {
-              label: "莲花山公园",
-              value: "lhgy"
-            },
-            {
-              label: "笔架山公园",
-              value: "bjsgy"
-            },
-            {
-              label: "梅林公园",
-              value: "mlgy"
-            },
-            {
-              label: "皇岗公园",
-              value: "wggy"
-            },
-            {
-              label: "红树林公园",
-              value: "hslgy"
-            },
-            {
-              label: "园博园",
-              value: "ybygy"
-            }
-          ]
-        }
-      ]
+      deptDate: []
     };
   },
-  created() {},
+  created() {
+    this.getDeptList();
+  },
   methods: {
+    async getDeptList() {
+      const { data: res } = await this.$http.post("teamList/dept/tree", {});
+      console.log(res);
+
+      this.deptDate = res.data;
+    },
     // 保存
     handleLogin() {
       this.$refs.loginFormRef.validate(async valid => {
-        console.log(valid);
-
         if (!valid) return;
         const { data: res } = await this.$http.post("teamList/addMember", {
-          id: this.loginForm.id,
+          id: 132148489456456540,
+          teamDept: this.loginForm.deptValue,
+          teamPackageUuid: "SDWQDEWQDASDSADWQQWWQEEW",
           patient: {
             name: this.loginForm.name,
-            dept: this.loginForm.deptValue,
             phone: this.loginForm.phone,
             sex: this.loginForm.sex,
             birth: this.timesChangeDate(this.loginForm.birth),
@@ -265,15 +204,28 @@ export default {
     },
     // 选择部门区域方法
     showDept() {
+      this.loginForm.deptValue = "";
+      this.loginForm.dept = "";
       this.pickerVisible = true;
     },
     cancel() {
       console.log("cancel");
     },
     confirm(res) {
-      this.loginForm.dept = res[1].label;
-      this.loginForm.deptValue = res[1].value;
-      //   console.log(res[1].label);
+      console.log(res);
+
+      // 数组长度减1 获取数组最后一项的下标
+      var DeptLength = res.length;
+      this.loginForm.deptValue = res[DeptLength - 1].value;
+
+      var deptStr = "";
+      for (var i = 0; i < res.length; i++) {
+        deptStr += res[i].label + "-";
+      }
+      if (deptStr.length > 0) {
+        deptStr = deptStr.substr(0, deptStr.length - 1);
+      }
+      this.loginForm.dept = deptStr;
     }
   },
   mounted() {
