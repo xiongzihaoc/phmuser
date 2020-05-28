@@ -8,8 +8,7 @@
       <div class="col-xs-6 col-md-6">
         <div class="tou text-right">
           <a href="javascript:;history.back()" class="green">
-            返回
-            <i class="ic ic-arr-right"></i>
+            返回>>
           </a>
         </div>
       </div>

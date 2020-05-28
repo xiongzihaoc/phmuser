@@ -3,17 +3,19 @@
   <!-- 公用头部组件 -->
   <Header></Header>
   <!------题目列表------>
-  <div class="mb20" id="testQuestion" style>
+  <div class="mb20" id="testQuestion" style="overflow:hidden">
     <div class="row mt20 mb20">
       <div class="col-xs-6 col-md-6">
         <div class="taocanName" style="padding-left: 2px;"></div>
       </div>
       <div class="col-xs-6 col-md-6">
         <div class="tou text-right">
-          <a href="javascript:;" id="questionGoBack" class="green" @click.prevent.stop="backStart">
-            返回
-            <i class="ic ic-arr-right"></i>
-          </a>
+          <a
+            href="javascript:;"
+            id="questionGoBack"
+            class="backG green"
+            @click.prevent.stop="backStart"
+          >返回>></a>
         </div>
       </div>
     </div>
@@ -22,19 +24,16 @@
         <h2 id="sheetName" data-id="368">{{this.$route.query.name}}</h2>
       </div>
       <div class="pd2">
-        <div class="row3" style>
-          <div class="col-xs-2 col-md-2 text-left">
-            <h3 class="gray">进度条</h3>
-          </div>
-          <div class="col-xs-8 col-md-8">
-            <van-progress
-              color="#FF6969"
-              stroke-width="7"
-              :show-pivot="false"
-              :percentage="optionProgress"
-            />
-          </div>
-          <div class="col-xs-2 col-md-2 text-right">
+        <div class="row3">
+          <h3 class="gray col-xs-2 col-md-2 text-left" style="width:22%;">进度条</h3>
+          <van-progress
+            color="#FF6969"
+            stroke-width="7"
+            :show-pivot="false"
+            :percentage="optionProgress"
+            style="width:62%;"
+          />
+          <div class="col-xs-2 col-md-2 text-right" style="width:16%;">
             <span class="red">{{this.num + 1}}</span>
             <span class="gray">/{{sheetLength}}</span>
           </div>
@@ -322,17 +321,19 @@ export default {
       this.$router.replace({ path: "testWork" });
     },
     // 返回跳转到开始答题页面
-    backStart() {}
+    backStart() {
+      this.$router.push("testWork");
+    }
   }
 };
 </script>
 <style lang='less'>
 .row3 {
   display: flex;
-  flex-wrap: wrap;
+  justify-content: center; /*水平居中*/
+  align-items: center;
   margin-right: -15px;
   margin-left: -15px;
-  align-items: center;
 }
 .row2 {
   display: flex;
@@ -356,5 +357,12 @@ export default {
 .dialogSu {
   width: 80%;
   max-width: 600px;
+}
+html {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.backG {
+  margin-right: 20px;
 }
 </style>
