@@ -126,6 +126,8 @@ export default {
   },
   created() {
     this.order = window.localStorage.getItem("order");
+    console.log(this.order);
+    
     this.infoForm = JSON.parse(window.localStorage.getItem("infoForm"));
     this.getCarfInfoList();
   },
@@ -134,6 +136,8 @@ export default {
       const { data: res } = await this.$http.post("checkList/getPackage", {
         orderNo: this.order
       });
+      console.log(res);
+
       this.taoCanList = res.data;
     },
     jumpStart(info) {
@@ -156,8 +160,7 @@ export default {
       } else if (res.code != 200 && res.code != 500) {
         return this.$toast("请完成所有量表");
       }
-    },
-
+    }
   }
 };
 </script>

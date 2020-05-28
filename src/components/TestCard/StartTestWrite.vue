@@ -64,9 +64,13 @@
         <div class="row mt40" v-if="this.sheetList[num]">
           <div class="col-xs-12 col-md-4 tips">
             <span class="red">请注意：</span>
-            <span class="gray" id="tips" v-show="this.sheetList[num].quesType == 1">单选题，请选择！</span>
-            <span class="gray" id="tips" v-show="this.sheetList[num].quesType == 2">多选题，请选择！</span>
-            <span class="gray" id="tips" v-show="this.sheetList[num].quesType == 3">文本题 ！</span>
+            <span
+              class="gray"
+              id="tips"
+              v-if="this.sheetList[num].quesType == 1 || this.sheetList[num].quesType == 4"
+            >单选题，请选择！</span>
+            <span class="gray" id="tips" v-else-if="this.sheetList[num].quesType == 2">多选题，请选择！</span>
+            <span class="gray" id="tips" v-else-if="this.sheetList[num].quesType == 3">文本题 ！</span>
           </div>
           <div class="col-xs-12 col-md-8 text-right">
             <a
@@ -155,7 +159,10 @@ export default {
     },
     radioCheck(item, index) {
       if (this.sheetLength >= this.num + 1) {
-        if (this.sheetList[this.num].quesType == 1) {
+        if (
+          this.sheetList[this.num].quesType == 1 ||
+          this.sheetList[this.num].quesType == 4
+        ) {
           var optionList = this.sheetList[this.num].option;
           for (var i = 0; i < optionList.length; i++) {
             optionList[i].selected = 0;
@@ -249,7 +256,10 @@ export default {
           optLabel = optionList[i].optLabel;
         }
       }
-      if (this.sheetList[this.num].quesType == 1) {
+      if (
+        this.sheetList[this.num].quesType == 1 ||
+        this.sheetList[this.num].quesType == 4
+      ) {
         questionContent = {
           ansUuid: this.$route.query.ansUuid,
           sheetUuid: this.sheetList[this.num].sheetUuid,

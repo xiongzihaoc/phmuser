@@ -11,7 +11,7 @@
       :rules="Addrules"
       class="login-form"
       label-width="80px"
-      label-position="center"
+      label-position="left"
     >
       <el-form-item label="部  门" prop="dept">
         <el-input
@@ -21,21 +21,18 @@
           @focus="showDept()"
           readonly
         ></el-input>
-        <VuePicker
-          :layer="4"
-          :data="deptDate"
-          @cancel="cancel"
-          @confirm="confirm"
-          :showToolbar="true"
-          :maskClick="true"
-          :visible.sync="pickerVisible"
-        ></VuePicker>
       </el-form-item>
       <el-form-item label="姓  名" prop="name">
         <el-input ref="name" v-model="loginForm.name" placeholder="请输入姓名" type="text" />
       </el-form-item>
       <el-form-item label="电  话" prop="phone">
-        <el-input ref="phone" v-model="loginForm.phone" placeholder="请输入电话" type="text" />
+        <el-input
+          ref="phone"
+          v-model="loginForm.phone"
+          placeholder="请输入电话"
+          type="text"
+          @blur="IsRepetition"
+        />
       </el-form-item>
       <el-form-item label="生  日" prop="birth" style="wdith:100%">
         <el-input v-model="loginForm.birth" placeholder="选择日期" @focus="showPopFn()" readonly></el-input>
@@ -75,6 +72,17 @@
       <el-button class="loginBtn" type="danger" @click.native.prevent="handleLogin">保 存</el-button>
     </el-form>
   </div>
+  <!-- 部门选择器 -->
+  <VuePicker
+    :layer="3"
+    :data="deptDate"
+    ref="pickerRef"
+    @cancel="cancel"
+    @confirm="confirm"
+    :showToolbar="true"
+    :maskClick="true"
+    :visible.sync="pickerVisible"
+  ></VuePicker>
 </body>
 </template>
 <script>
@@ -153,27 +161,32 @@ export default {
       show: false, // 用来显示弹出层
       //   测试数据
       pickerVisible: false,
-      deptDate: []
+      deptDate: [],
+      infoForm: {}
     };
   },
   created() {
-    this.getDeptList();
+    this.infoForm = this.$route.query;
+    console.log(this.infoForm);
+
+    // this.getDeptList();
   },
   methods: {
     async getDeptList() {
-      const { data: res } = await this.$http.post("teamList/dept/tree", {});
-      console.log(res);
-
+      const { data: res } = await this.$http.post("teamList/dept/tree", {
+        code: this.infoForm.deptCode
+      });
       this.deptDate = res.data;
+      console.log(this.deptDate);
     },
     // 保存
     handleLogin() {
       this.$refs.loginFormRef.validate(async valid => {
         if (!valid) return;
         const { data: res } = await this.$http.post("teamList/addMember", {
-          id: 132148489456456540,
+          id: this.infoForm.teamId,
           teamDept: this.loginForm.deptValue,
-          teamPackageUuid: "SDWQDEWQDASDSADWQQWWQEEW",
+          teamPackageUuid: this.infoForm.teamPackageUuid,
           patient: {
             name: this.loginForm.name,
             phone: this.loginForm.phone,
@@ -184,10 +197,32 @@ export default {
             edu: this.loginForm.edu
           }
         });
+        if (res.code !== 200) return this.$toast.fail("保存失败");
+        window.localStorage.setItem("order", res.data.orderNo);
+        window.localStorage.setItem("infoForm", JSON.stringify(res.data));
+        this.$router.replace({
+          path: "/testReport"
+        });
       });
     },
-    saveEnter() {
-      this.$router.push("testReport");
+    // 查看数据库是否有重复信息,如果有直接登录 没有return
+    async IsRepetition() {
+      const { data: res } = await this.$http.post(
+        "checkList/team/checkMember",
+        {
+          teamNo: this.infoForm.singleNum,
+          phone: this.loginForm.phone
+        }
+      );
+      if (res.code == 200 && res.data !== null) {
+        window.localStorage.setItem("order", res.data.orderNo);
+        window.localStorage.setItem("infoForm", JSON.stringify(res.data));
+        this.$router.replace({
+          path: "/testReport"
+        });
+      } else {
+        return;
+      }
     },
     // 选择日期
     showPopFn() {
@@ -204,6 +239,7 @@ export default {
     },
     // 选择部门区域方法
     showDept() {
+      this.getDeptList();
       this.loginForm.deptValue = "";
       this.loginForm.dept = "";
       this.pickerVisible = true;
@@ -211,13 +247,14 @@ export default {
     cancel() {
       console.log("cancel");
     },
+    // 确定部门选择
     confirm(res) {
       console.log(res);
 
       // 数组长度减1 获取数组最后一项的下标
       var DeptLength = res.length;
       this.loginForm.deptValue = res[DeptLength - 1].value;
-
+      // 拼接部门名称
       var deptStr = "";
       for (var i = 0; i < res.length; i++) {
         deptStr += res[i].label + "-";
@@ -271,5 +308,16 @@ body {
 .dialogSu {
   width: 80%;
   max-width: 600px;
+}
+.el-input--small .el-input__inner {
+  line-height: normal;
+}
+
+.el-input--medium .el-input__inner {
+  line-height: normal;
+}
+
+.el-input__inner {
+  line-height: normal;
 }
 </style>
