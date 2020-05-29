@@ -26,7 +26,7 @@ axios.interceptors.request.use(function (config) {
 })
 // axios响应拦截器
 axios.interceptors.response.use(function (config) {
-  if (config.status != 200) return this.$message.error('服务器异常')
+  if (config.status !== 200) return this.$message.error('服务器异常')
   NProgress.done()
   return config;
 }, function (error) {

@@ -168,8 +168,7 @@ export default {
   created() {
     this.infoForm = this.$route.query;
     console.log(this.infoForm);
-
-    // this.getDeptList();
+    this.getDeptList();
   },
   methods: {
     async getDeptList() {
@@ -186,6 +185,7 @@ export default {
         const { data: res } = await this.$http.post("teamList/addMember", {
           id: this.infoForm.teamId,
           teamDept: this.loginForm.deptValue,
+          teamNo: this.infoForm.singleNum,
           teamPackageUuid: this.infoForm.teamPackageUuid,
           patient: {
             name: this.loginForm.name,
@@ -239,7 +239,6 @@ export default {
     },
     // 选择部门区域方法
     showDept() {
-      this.getDeptList();
       this.loginForm.deptValue = "";
       this.loginForm.dept = "";
       this.pickerVisible = true;
