@@ -127,7 +127,7 @@ export default {
   created() {
     this.order = window.localStorage.getItem("order");
     console.log(this.order);
-    
+
     this.infoForm = JSON.parse(window.localStorage.getItem("infoForm"));
     this.getCarfInfoList();
   },
@@ -159,6 +159,9 @@ export default {
         return this.$toast(res.data);
       } else if (res.code != 200 && res.code != 500) {
         return this.$toast("请完成所有量表");
+      } else if (res.code == 200) {
+        return this.$toast("提交成功");
+        this.getCarfInfoList();
       }
     }
   }

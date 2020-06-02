@@ -31,7 +31,7 @@
           v-model="loginForm.phone"
           placeholder="请输入电话"
           type="text"
-          @blur="IsRepetition"
+          @change="IsRepetition"
         />
       </el-form-item>
       <el-form-item label="生  日" prop="birth" style="wdith:100%">
@@ -65,7 +65,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="文  化" prop="edu">
-        <el-select v-model="loginForm.edu" placeholder="请选择职业" style="width:100%">
+        <el-select v-model="loginForm.edu" placeholder="请选择文化程度" style="width:100%">
           <el-option v-for="item in eduList" :key="item.id" :label="item.name" :value="item.name"></el-option>
         </el-select>
       </el-form-item>
@@ -112,7 +112,7 @@ export default {
         ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
-          { validator: checkMobile, trigger: "blur" }
+          { validator: checkMobile, trigger: "change" }
         ],
         sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         birth: [{ required: true, message: "请选择出生日期" }],
@@ -197,12 +197,15 @@ export default {
             edu: this.loginForm.edu
           }
         });
-        if (res.code !== 200) return this.$toast.fail("保存失败");
-        window.localStorage.setItem("order", res.data.orderNo);
-        window.localStorage.setItem("infoForm", JSON.stringify(res.data));
-        this.$router.replace({
-          path: "/testReport"
-        });
+        if (res.code !== 200) {
+          return this.$toast.fail("保存失败");
+        } else {
+          window.localStorage.setItem("order", res.data.orderNo);
+          window.localStorage.setItem("infoForm", JSON.stringify(res.data));
+          this.$router.replace({
+            path: "/testReport"
+          });
+        }
       });
     },
     // 查看数据库是否有重复信息,如果有直接登录 没有return
@@ -220,6 +223,7 @@ export default {
         this.$router.replace({
           path: "/testReport"
         });
+        this.$toast.fail("手机号码已存在，直接登录");
       } else {
         return;
       }

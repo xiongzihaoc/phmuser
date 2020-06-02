@@ -62,8 +62,16 @@ export default {
       },
       show: false,
       personalList: {},
-      Num: ""
+      Num: "",
+      PrOrderNo: ""
     };
+  },
+  created() {
+    this.PrOrderNo = this.$route.query.orderNo;
+    if (this.PrOrderNo !== "") {
+      this.loginForm.cardNumber = PrOrderNo;
+      this.btnSubmitCard();
+    }
   },
   methods: {
     btnSubmitCard() {

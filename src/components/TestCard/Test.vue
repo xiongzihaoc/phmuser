@@ -3,7 +3,7 @@
   <!-- 公用头部组件 -->
   <Header></Header>
   <div class="container">
-    <div class="row idx">
+    <div class="row idx conFlex">
       <div class="col-sm-12 col-md-6">
         <div class="idx-box">
           <div>
@@ -12,14 +12,14 @@
           <a href="javascript:;" class="mbtn" @click.prevent.stop="test">测试</a>
         </div>
       </div>
-      <div class="col-sm-12 col-md-6">
+      <!-- <div class="col-sm-12 col-md-6">
         <div class="idx-box">
           <div>
             <i class="ic ic-search"></i>
           </div>
           <a href="javascript:;" class="mbtn" @click.prevent.stop="report">报告</a>
         </div>
-      </div>
+      </div>-->
     </div>
   </div>
 </body>
@@ -43,5 +43,11 @@ export default {
 <style lang='less'>
 .row2 {
   display: flex;
+}
+.conFlex {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
 }
 </style>
