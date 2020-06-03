@@ -1,7 +1,7 @@
 <template>
 <body class="ubg2">
   <!-- 公用头部组件 -->
-  <Header></Header>
+  <!-- <Header></Header> -->
   <!------题目列表------>
   <div class="mb20" id="testQuestion" style="overflow:hidden">
     <div class="row mt20 mb20">

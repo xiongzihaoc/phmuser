@@ -69,28 +69,46 @@ export default {
   created() {
     this.PrOrderNo = this.$route.query.orderNo;
     if (this.PrOrderNo !== "") {
-      this.loginForm.cardNumber = PrOrderNo;
+      //   this.loginForm.cardNumber = this.PrOrderNo;
+      //   const { data: res } = this.$http.post("checkList/confirmInfo", {
+      //     orderNo: this.loginForm.cardNumber.trim()
+      //   });
+      //   if (res.code != 200 || res.data == null)
+      //     return this.$toast.fail("卡号不存在");
+      //   this.personalList = res.data;
+      //   this.Num = res.data.hasConfirm;
+      //   window.localStorage.setItem("order", this.loginForm.cardNumber);
+      //   window.localStorage.setItem(
+      //     "infoForm",
+      //     JSON.stringify(this.personalList)
+      //   );
+      //   this.show = true;
+      // }
+      this.loginForm.cardNumber = this.PrOrderNo;
       this.btnSubmitCard();
     }
   },
   methods: {
-    btnSubmitCard() {
-      this.$refs.loginFormRef.validate(async valid => {
-        if (!valid) return;
-        const { data: res } = await this.$http.post("checkList/confirmInfo", {
-          orderNo: this.loginForm.cardNumber.trim()
-        });
-        if (res.code != 200 || res.data == null)
-          return this.$toast.fail("卡号不存在");
-        this.personalList = res.data;
-        this.Num = res.data.hasConfirm;
-        window.localStorage.setItem("order", this.loginForm.cardNumber);
-        window.localStorage.setItem(
-          "infoForm",
-          JSON.stringify(this.personalList)
-        );
-        this.show = true;
+    async btnSubmitCard() {
+      // this.$refs.loginFormRef.validate(async valid => {
+      //   console.log(valid);
+
+      // if (!valid) return;
+      const { data: res } = await this.$http.post("checkList/confirmInfo", {
+        orderNo: this.loginForm.cardNumber
       });
+      if (res.code != 200 || res.data == null)
+        return 
+        // this.$toast.fail("卡号不存在");
+      this.personalList = res.data;
+      this.Num = res.data.hasConfirm;
+      window.localStorage.setItem("order", this.loginForm.cardNumber);
+      window.localStorage.setItem(
+        "infoForm",
+        JSON.stringify(this.personalList)
+      );
+      this.show = true;
+      // });
     },
     loginEnter() {
       if (this.Num == 0) {

@@ -94,6 +94,7 @@
             id="testSubmit"
             v-if="this.infoForm.state == 3"
             disabled
+            style="color: #fff;background-color: #666;border-color: #666;"
           >提交答案</button>
           <button
             type="button"
@@ -127,7 +128,6 @@ export default {
   created() {
     this.order = window.localStorage.getItem("order");
     console.log(this.order);
-
     this.infoForm = JSON.parse(window.localStorage.getItem("infoForm"));
     this.getCarfInfoList();
   },
@@ -136,8 +136,6 @@ export default {
       const { data: res } = await this.$http.post("checkList/getPackage", {
         orderNo: this.order
       });
-      console.log(res);
-
       this.taoCanList = res.data;
     },
     jumpStart(info) {
@@ -151,17 +149,25 @@ export default {
         }
       });
     },
+    async location() {
+      const { data: res } = await this.$http.post("checkList/confirmInfo", {
+        orderNo: this.order
+      });
+      window.localStorage.setItem("infoForm", JSON.stringify(res.data));
+    },
     async saveAnsBtn() {
       const { data: res } = await this.$http.post("checkList/approvePackage", {
         orderNo: this.order
       });
       if (res.code == 500) {
         return this.$toast(res.data);
+      } else if (res.code == 200) {
+        this.$toast("提交成功");
+        this.infoForm.state = 3;
+        this.location();
+        return;
       } else if (res.code != 200 && res.code != 500) {
         return this.$toast("请完成所有量表");
-      } else if (res.code == 200) {
-        return this.$toast("提交成功");
-        this.getCarfInfoList();
       }
     }
   }

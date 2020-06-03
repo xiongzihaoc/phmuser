@@ -1,8 +1,8 @@
 <template>
 <body>
-  <header>
+  <!-- <header>
     <img src="../../images/logo.png" alt />
-  </header>
+  </header> -->
   <div class="infoBox">
     <h2 style="margin-bottom:20px;">基本信息</h2>
     <el-form

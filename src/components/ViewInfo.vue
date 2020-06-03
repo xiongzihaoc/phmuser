@@ -1,8 +1,8 @@
 <template>
 <body>
-  <header>
+  <!-- <header>
     <img src="../images/logo.png" alt />
-  </header>
+  </header> -->
   <div class="infoBox">
     <h2 style="margin-bottom:20px;">基本信息</h2>
     <el-form
@@ -114,31 +114,23 @@ export default {
         edu: [{ required: true, message: "请选择教育程度", trigger: "blur" }]
       },
       jobList: [
-        { id: 1, name: "国家公务员" },
-        { id: 2, name: "专业技术人员" },
-        { id: 3, name: "职员" },
-        { id: 4, name: "企业管理人员" },
-        { id: 5, name: "工人" },
-        { id: 6, name: "农民" },
-        { id: 7, name: "学生" },
-        { id: 8, name: "现役军人" },
-        { id: 9, name: "自由职业者" },
-        { id: 10, name: "个体经营者" },
-        { id: 11, name: "无业人员" },
-        { id: 12, name: "退(离)休人员" },
-        { id: 13, name: "其他" }
+        { id: 1, name: "职员" },
+        { id: 2, name: "企业职员" },
+        { id: 3, name: "国家公职人员" },
+        { id: 4, name: "务农" },
+        { id: 5, name: "务工" },
+        { id: 6, name: "科技技术员" },
+        { id: 7, name: "教师" },
+        { id: 8, name: "学生" },
+        { id: 9, name: "无业" },
+        { id: 10, name: "其他" }
       ],
       eduList: [
-        { id: 1, name: "博士" },
-        { id: 2, name: "硕士" },
-        { id: 3, name: "本科" },
-        { id: 4, name: "大专" },
-        { id: 5, name: "中专和中技" },
-        { id: 6, name: "技工学校" },
-        { id: 7, name: "高中" },
-        { id: 8, name: "初中" },
-        { id: 9, name: "小学" },
-        { id: 10, name: "文盲与半文盲" }
+        { id: 1, name: "本科" },
+        { id: 2, name: "大专" },
+        { id: 3, name: "高中" },
+        { id: 4, name: "初中" },
+        { id: 5, name: "其他" }
       ],
       loginForm: {
         name: "",
