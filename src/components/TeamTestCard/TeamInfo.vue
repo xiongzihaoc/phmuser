@@ -1,98 +1,151 @@
 <template>
-<body>
-  <!-- <header>
+  <body>
+    <!-- <header>
     <img src="../../images/logo.png" alt />
   </header> -->
-  <div class="infoBox">
-    <h2 style="margin-bottom:20px;">基本信息</h2>
-    <el-form
-      ref="loginFormRef"
-      :model="loginForm"
-      :rules="Addrules"
-      class="login-form"
-      label-width="80px"
-      label-position="left"
-    >
-      <el-form-item label="部  门" prop="dept">
-        <el-input
-          v-model="loginForm.dept"
-          placeholder="请选择部门"
-          type="text"
-          @focus="showDept()"
-          readonly
-        ></el-input>
-      </el-form-item>
-      <el-form-item label="姓  名" prop="name">
-        <el-input ref="name" v-model="loginForm.name" placeholder="请输入姓名" type="text" />
-      </el-form-item>
-      <el-form-item label="电  话" prop="phone">
-        <el-input
-          ref="phone"
-          v-model="loginForm.phone"
-          placeholder="请输入电话"
-          type="text"
-          @change="IsRepetition"
-        />
-      </el-form-item>
-      <el-form-item label="生  日" prop="birth" style="wdith:100%">
-        <el-input v-model="loginForm.birth" placeholder="选择日期" @focus="showPopFn()" readonly></el-input>
-        <van-popup v-model="show" position="bottom" :style="{ height: '40%' }">
-          <van-datetime-picker
-            v-model="currentDate"
-            type="date"
-            :min-date="minDate"
-            :max-date="maxDate"
-            @confirm="confirmFn()"
-            @cancel="cancelFn()"
+    <div class="infoBox">
+      <h2 style="margin-bottom:20px;">基本信息</h2>
+      <el-form
+        ref="loginFormRef"
+        :model="loginForm"
+        :rules="Addrules"
+        class="login-form"
+        label-width="80px"
+        label-position="left"
+      >
+        <el-form-item label="部  门" prop="dept">
+          <el-input
+            v-model="loginForm.dept"
+            placeholder="请选择部门"
+            type="text"
+            @focus="showDept()"
+            readonly
+          ></el-input>
+        </el-form-item>
+        <el-form-item label="姓  名" prop="name">
+          <el-input
+            ref="name"
+            v-model="loginForm.name"
+            placeholder="请输入姓名"
+            type="text"
           />
-        </van-popup>
-      </el-form-item>
-      <el-form-item label="性  别" prop="sex">
-        <el-select v-model="loginForm.sex" placeholder="请选择性别" style="width:100%">
-          <el-option label="男" value="男"></el-option>
-          <el-option label="女" value="女"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="婚  姻" prop="marriage">
-        <el-select v-model="loginForm.marriage" placeholder="请选择" style="width:100%">
-          <el-option label="未婚" value="未婚"></el-option>
-          <el-option label="已婚" value="已婚"></el-option>
-          <el-option label="离异" value="离异"></el-option>
-          <el-option label="丧偶" value="丧偶"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="职  业" prop="job">
-        <el-select v-model="loginForm.job" placeholder="请选择职业" style="width:100%">
-          <el-option v-for="item in jobList" :key="item.id" :label="item.name" :value="item.name"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="文  化" prop="edu">
-        <el-select v-model="loginForm.edu" placeholder="请选择文化程度" style="width:100%">
-          <el-option v-for="item in eduList" :key="item.id" :label="item.name" :value="item.name"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-button class="loginBtn" type="danger" @click.native.prevent="handleLogin">保 存</el-button>
-    </el-form>
-  </div>
-  <!-- 部门选择器 -->
-  <VuePicker
-    :layer="3"
-    :data="deptDate"
-    ref="pickerRef"
-    @cancel="cancel"
-    @confirm="confirm"
-    :showToolbar="true"
-    :maskClick="true"
-    :visible.sync="pickerVisible"
-  ></VuePicker>
-</body>
+        </el-form-item>
+        <el-form-item label="身 份 证" prop="idCard">
+          <el-input
+            ref="name"
+            v-model="loginForm.idCard"
+            placeholder="请输入身份证号码"
+            type="text"
+          />
+        </el-form-item>
+        <el-form-item label="生  日" prop="birth" style="wdith:100%">
+          <el-input
+            v-model="loginForm.birth"
+            placeholder="选择日期"
+            @focus="showPopFn()"
+            readonly
+          ></el-input>
+          <van-popup
+            v-model="show"
+            position="bottom"
+            :style="{ height: '40%' }"
+          >
+            <van-datetime-picker
+              v-model="currentDate"
+              type="date"
+              :min-date="minDate"
+              :max-date="maxDate"
+              @confirm="confirmFn()"
+              @cancel="cancelFn()"
+            />
+          </van-popup>
+        </el-form-item>
+                <el-form-item label="电  话" prop="phone">
+          <el-input
+            ref="phone"
+            v-model="loginForm.phone"
+            placeholder="请输入电话"
+            type="text"
+            @change="IsRepetition"
+          />
+        </el-form-item>
+        <el-form-item label="性  别" prop="sex">
+          <el-select
+            v-model="loginForm.sex"
+            placeholder="请选择性别"
+            style="width:100%"
+          >
+            <el-option label="男" value="男"></el-option>
+            <el-option label="女" value="女"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="婚  姻" prop="marriage">
+          <el-select
+            v-model="loginForm.marriage"
+            placeholder="请选择"
+            style="width:100%"
+          >
+            <el-option label="未婚" value="未婚"></el-option>
+            <el-option label="已婚" value="已婚"></el-option>
+            <el-option label="离异" value="离异"></el-option>
+            <el-option label="丧偶" value="丧偶"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="职  业" prop="job">
+          <el-select
+            v-model="loginForm.job"
+            placeholder="请选择职业"
+            style="width:100%"
+          >
+            <el-option
+              v-for="item in jobList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="文  化" prop="edu">
+          <el-select
+            v-model="loginForm.edu"
+            placeholder="请选择文化程度"
+            style="width:100%"
+          >
+            <el-option
+              v-for="item in eduList"
+              :key="item.id"
+              :label="item.name"
+              :value="item.name"
+            ></el-option>
+          </el-select>
+        </el-form-item>
+        <el-button
+          class="loginBtn"
+          type="danger"
+          @click.native.prevent="handleLogin"
+          >保 存</el-button
+        >
+      </el-form>
+    </div>
+    <!-- 部门选择器 -->
+    <VuePicker
+      :layer="3"
+      :data="deptDate"
+      ref="pickerRef"
+      @cancel="cancel"
+      @confirm="confirm"
+      :showToolbar="true"
+      :maskClick="true"
+      :visible.sync="pickerVisible"
+    ></VuePicker>
+  </body>
 </template>
 <script>
 import { timesChangeDate } from "../../assets/js/changeTime";
 import VuePicker from "vue-pickers";
 export default {
   components: {
-    VuePicker
+    VuePicker,
   },
   data() {
     // 手机验证规则
@@ -103,26 +156,38 @@ export default {
       }
       return cb(new Error("请输入合法的手机号"));
     };
+
+    var IdCardRule = (rule, value, cb) => {
+      const regMoblie = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+      if (regMoblie.test(value)) {
+        return cb();
+      }
+      return cb(new Error("请输入合法的身份证号码"));
+    };
     return {
       timesChangeDate,
       // 表单检验规则
       Addrules: {
         dept: [{ required: true, message: "请选择部门" }],
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
+        idCard: [
+          { required: true, message: "请输入身份证号码", trigger: "blur" },
+          { validator: IdCardRule, trigger: "change" },
+        ],
         docName: [
-          { required: true, message: "请输入医生姓名", trigger: "blur" }
+          { required: true, message: "请输入医生姓名", trigger: "blur" },
         ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
-          { validator: checkMobile, trigger: "change" }
+          { validator: checkMobile, trigger: "change" },
         ],
         sex: [{ required: true, message: "请选择性别", trigger: "blur" }],
         birth: [{ required: true, message: "请选择出生日期" }],
         job: [{ required: true, message: "请选择职业", trigger: "blur" }],
         marriage: [
-          { required: true, message: "请选择婚姻状况", trigger: "blur" }
+          { required: true, message: "请选择婚姻状况", trigger: "blur" },
         ],
-        edu: [{ required: true, message: "请选择教育程度", trigger: "blur" }]
+        edu: [{ required: true, message: "请选择教育程度", trigger: "blur" }],
       },
       jobList: [
         { id: 1, name: "国家公务员" },
@@ -137,7 +202,7 @@ export default {
         { id: 10, name: "个体经营者" },
         { id: 11, name: "无业人员" },
         { id: 12, name: "退(离)休人员" },
-        { id: 13, name: "其他" }
+        { id: 13, name: "其他" },
       ],
       eduList: [
         { id: 1, name: "博士" },
@@ -149,7 +214,7 @@ export default {
         { id: 7, name: "高中" },
         { id: 8, name: "初中" },
         { id: 9, name: "小学" },
-        { id: 10, name: "文盲与半文盲" }
+        { id: 10, name: "文盲与半文盲" },
       ],
       loginForm: {
         name: "",
@@ -161,7 +226,8 @@ export default {
         dept: "",
         deptValue: "",
         birth: "",
-        hasConfirm: ""
+        idCard: "",
+        hasConfirm: "",
       },
       //   Isshow: false,
       //   时间选择配置
@@ -172,7 +238,7 @@ export default {
       //   测试数据
       pickerVisible: false,
       deptDate: [],
-      infoForm: {}
+      infoForm: {},
     };
   },
   created() {
@@ -183,14 +249,14 @@ export default {
   methods: {
     async getDeptList() {
       const { data: res } = await this.$http.post("teamList/dept/tree", {
-        code: this.infoForm.deptCode
+        code: this.infoForm.deptCode,
       });
       this.deptDate = res.data;
       console.log(this.deptDate);
     },
     // 保存
     handleLogin() {
-      this.$refs.loginFormRef.validate(async valid => {
+      this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return;
         const { data: res } = await this.$http.post("teamList/addMember", {
           id: this.infoForm.teamId,
@@ -198,14 +264,15 @@ export default {
           teamNo: this.infoForm.singleNum,
           teamPackageUuid: this.infoForm.teamPackageUuid,
           patient: {
+            idCard: this.loginForm.idCard,
             name: this.loginForm.name,
             phone: this.loginForm.phone,
             sex: this.loginForm.sex,
             birth: this.timesChangeDate(this.loginForm.birth),
             job: this.loginForm.job,
             marriage: this.loginForm.marriage,
-            edu: this.loginForm.edu
-          }
+            edu: this.loginForm.edu,
+          },
         });
         if (res.code !== 200) {
           return this.$toast.fail("保存失败");
@@ -213,7 +280,7 @@ export default {
           window.localStorage.setItem("order", res.data.orderNo);
           window.localStorage.setItem("infoForm", JSON.stringify(res.data));
           this.$router.replace({
-            path: "/testReport"
+            path: "/testReport",
           });
         }
       });
@@ -224,14 +291,14 @@ export default {
         "checkList/team/checkMember",
         {
           teamNo: this.infoForm.singleNum,
-          phone: this.loginForm.phone
+          phone: this.loginForm.phone,
         }
       );
       if (res.code == 200 && res.data !== null) {
         window.localStorage.setItem("order", res.data.orderNo);
         window.localStorage.setItem("infoForm", JSON.stringify(res.data));
         this.$router.replace({
-          path: "/testReport"
+          path: "/testReport",
         });
         this.$toast.fail("手机号码已存在，直接登录");
       } else {
@@ -276,11 +343,11 @@ export default {
         deptStr = deptStr.substr(0, deptStr.length - 1);
       }
       this.loginForm.dept = deptStr;
-    }
+    },
   },
   mounted() {
     this.timesChangeDate(new Date());
-  }
+  },
 };
 </script>
 <style>
