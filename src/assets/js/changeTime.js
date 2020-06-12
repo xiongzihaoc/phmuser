@@ -1,3 +1,4 @@
+// 格式化时间 yyyy-mm-dd
 function timesChangeDate(times) {
     var date = new Date(times);
     var y = date.getFullYear();

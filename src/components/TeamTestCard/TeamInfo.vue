@@ -1,132 +1,132 @@
 <template>
   <body>
-    <!-- <header>
-    <img src="../../images/logo.png" alt />
-  </header> -->
-    <div class="infoBox">
-      <h2 style="margin-bottom:20px;">基本信息</h2>
-      <el-form
-        ref="loginFormRef"
-        :model="loginForm"
-        :rules="Addrules"
-        class="login-form"
-        label-width="80px"
-        label-position="left"
-      >
-        <el-form-item label="部  门" prop="dept">
-          <el-input
-            v-model="loginForm.dept"
-            placeholder="请选择部门"
-            type="text"
-            @focus="showDept()"
-            readonly
-          ></el-input>
-        </el-form-item>
-        <el-form-item label="姓  名" prop="name">
-          <el-input
-            ref="name"
-            v-model="loginForm.name"
-            placeholder="请输入姓名"
-            type="text"
-          />
-        </el-form-item>
-        <el-form-item label="身 份 证" prop="idCard">
-          <el-input
-            ref="name"
-            v-model="loginForm.idCard"
-            placeholder="请输入身份证号码"
-            type="text"
-          />
-        </el-form-item>
-        <el-form-item label="生  日" prop="birth" style="wdith:100%">
-          <el-input
-            v-model="loginForm.birth"
-            placeholder="选择日期"
-            @focus="showPopFn()"
-            readonly
-          ></el-input>
-          <van-popup
-            v-model="show"
-            position="bottom"
-            :style="{ height: '40%' }"
-          >
-            <van-datetime-picker
-              v-model="currentDate"
-              type="date"
-              :min-date="minDate"
-              :max-date="maxDate"
-              @confirm="confirmFn()"
-              @cancel="cancelFn()"
-            />
-          </van-popup>
-        </el-form-item>
-                <el-form-item label="电  话" prop="phone">
-          <el-input
-            ref="phone"
-            v-model="loginForm.phone"
-            placeholder="请输入电话"
-            type="text"
-            @change="IsRepetition"
-          />
-        </el-form-item>
-        <el-form-item label="性  别" prop="sex">
-          <el-select
-            v-model="loginForm.sex"
-            placeholder="请选择性别"
-            style="width:100%"
-          >
-            <el-option label="男" value="男"></el-option>
-            <el-option label="女" value="女"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="婚  姻" prop="marriage">
-          <el-select
-            v-model="loginForm.marriage"
-            placeholder="请选择"
-            style="width:100%"
-          >
-            <el-option label="未婚" value="未婚"></el-option>
-            <el-option label="已婚" value="已婚"></el-option>
-            <el-option label="离异" value="离异"></el-option>
-            <el-option label="丧偶" value="丧偶"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="职  业" prop="job">
-          <el-select
-            v-model="loginForm.job"
-            placeholder="请选择职业"
-            style="width:100%"
-          >
-            <el-option
-              v-for="item in jobList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="文  化" prop="edu">
-          <el-select
-            v-model="loginForm.edu"
-            placeholder="请选择文化程度"
-            style="width:100%"
-          >
-            <el-option
-              v-for="item in eduList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-button
-          class="loginBtn"
-          type="danger"
-          @click.native.prevent="handleLogin"
-          >保 存</el-button
+    <div style="padding-top:20px">
+      <div class="infoBox">
+        <h2 style="margin-bottom:20px;">基本信息</h2>
+        <el-form
+          ref="loginFormRef"
+          :model="loginForm"
+          :rules="Addrules"
+          class="login-form"
+          label-width="80px"
+          label-position="left"
         >
-      </el-form>
+          <el-form-item label="姓  名" prop="name">
+            <el-input
+              ref="name"
+              v-model="loginForm.name"
+              placeholder="请输入姓名"
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item label="身 份 证" prop="idCard">
+            <el-input
+              ref="name"
+              v-model="loginForm.idCard"
+              placeholder="请输入身份证号码"
+              type="text"
+              @change="IsRepetitionIdCard"
+            />
+          </el-form-item>
+          <el-form-item label="手  机" prop="phone">
+            <el-input
+              ref="phone"
+              v-model="loginForm.phone"
+              placeholder="请输入手机号码"
+              type="text"
+            />
+          </el-form-item>
+          <el-form-item label="部  门" prop="dept">
+            <el-input
+              v-model="loginForm.dept"
+              placeholder="请选择部门"
+              type="text"
+              @focus="showDept()"
+              readonly
+            ></el-input>
+          </el-form-item>
+          <el-form-item label="性  别" prop="sex">
+            <el-select
+              v-model="loginForm.sex"
+              placeholder="请选择性别"
+              style="width:100%"
+            >
+              <el-option label="男" value="男"></el-option>
+              <el-option label="女" value="女"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="生  日" prop="birth" style="wdith:100%">
+            <el-input
+              v-model="loginForm.birth"
+              placeholder="请选择日期"
+              @focus="showPopFn()"
+              readonly
+            ></el-input>
+            <van-popup
+              v-model="show"
+              position="bottom"
+              :style="{ height: '40%' }"
+            >
+              <van-datetime-picker
+                v-model="currentDate"
+                type="date"
+                :min-date="minDate"
+                :max-date="maxDate"
+                @confirm="confirmFn()"
+                @cancel="cancelFn()"
+              />
+            </van-popup>
+          </el-form-item>
+          <el-form-item label="婚  姻" prop="marriage">
+            <el-select
+              v-model="loginForm.marriage"
+              placeholder="请选择"
+              style="width:100%"
+            >
+              <el-option label="未婚" value="未婚"></el-option>
+              <el-option label="已婚" value="已婚"></el-option>
+              <el-option label="离异" value="离异"></el-option>
+              <el-option label="丧偶" value="丧偶"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职  业" prop="job">
+            <el-select
+              v-model="loginForm.job"
+              placeholder="请选择职业"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in jobList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="文  化" prop="edu">
+            <el-select
+              v-model="loginForm.edu"
+              placeholder="请选择文化程度"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in eduList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-button
+            class="loginBtn"
+            type="danger"
+            @click.native.prevent="handleLogin"
+            >保 存</el-button
+          >
+        </el-form>
+      </div>
     </div>
+
     <!-- 部门选择器 -->
     <VuePicker
       :layer="3"
@@ -228,6 +228,7 @@ export default {
         birth: "",
         idCard: "",
         hasConfirm: "",
+        editId:"",
       },
       //   Isshow: false,
       //   时间选择配置
@@ -258,51 +259,83 @@ export default {
     handleLogin() {
       this.$refs.loginFormRef.validate(async (valid) => {
         if (!valid) return;
-        const { data: res } = await this.$http.post("teamList/addMember", {
-          id: this.infoForm.teamId,
+        const { data: res } = await this.$http.post("checkList/update", {
+          id: this.editId,
           teamDept: this.loginForm.deptValue,
           teamNo: this.infoForm.singleNum,
-          teamPackageUuid: this.infoForm.teamPackageUuid,
-          patient: {
-            idCard: this.loginForm.idCard,
-            name: this.loginForm.name,
-            phone: this.loginForm.phone,
-            sex: this.loginForm.sex,
-            birth: this.timesChangeDate(this.loginForm.birth),
-            job: this.loginForm.job,
-            marriage: this.loginForm.marriage,
-            edu: this.loginForm.edu,
-          },
+          teamPackageUuid: "",
+          // teamPackageUuid: this.infoForm.teamPackageUuid,
+          // patient: {
+          idCard: this.loginForm.idCard,
+          name: this.loginForm.name,
+          phone: this.loginForm.phone,
+          sex: this.loginForm.sex,
+          birth: this.timesChangeDate(this.loginForm.birth),
+          job: this.loginForm.job,
+          marriage: this.loginForm.marriage,
+          edu: this.loginForm.edu,
+          // },
         });
         if (res.code !== 200) {
-          return this.$toast.fail("保存失败");
+          return this.$toast.fail("更新失败");
         } else {
-          window.localStorage.setItem("order", res.data.orderNo);
-          window.localStorage.setItem("infoForm", JSON.stringify(res.data));
           this.$router.replace({
             path: "/testReport",
           });
         }
       });
     },
-    // 查看数据库是否有重复信息,如果有直接登录 没有return
-    async IsRepetition() {
+    // 查看数据库是否有重复信息,如果有直接更新登录 没有return
+    async IsRepetitionIdCard() {
       const { data: res } = await this.$http.post(
         "checkList/team/checkMember",
         {
           teamNo: this.infoForm.singleNum,
-          phone: this.loginForm.phone,
+          idCard: this.loginForm.idCard,
         }
       );
+      this.editId = res.data.id
+      console.log(res);
+      
       if (res.code == 200 && res.data !== null) {
+        this.loginForm = res.data;
+        this.loginForm.deptValue = res.data.teamDept;
+        console.log(this.deptDate);
+        if (res.data.teamDept != null && res.data.teamDept != "") {
+          var deptName = "";
+          if (this.deptDate != null && this.deptDate.length > 0) {
+            this.deptDate.forEach((ele) => {
+              var children = ele.children;
+              if (res.data.teamDept == ele.code) {
+                deptName = ele.label;
+                return;
+              }
+              if (children != null && children.length > 0) {
+                children.forEach((el) => {
+                  var children = el.children;
+                  if (res.data.teamDept == el.code) {
+                    deptName = ele.label + "-" + el.label;
+                    return;
+                  }
+                  if (children != null && children.length > 0) {
+                    children.forEach((e) => {
+                      if (res.data.teamDept == e.code) {
+                        deptName = ele.label + "-" + el.label + "-" + e.label;
+                        return;
+                      }
+                    });
+                  }
+                });
+              }
+            });
+            this.loginForm.dept = deptName;
+          }
+        }
+
         window.localStorage.setItem("order", res.data.orderNo);
         window.localStorage.setItem("infoForm", JSON.stringify(res.data));
-        this.$router.replace({
-          path: "/testReport",
-        });
-        this.$toast.fail("手机号码已存在，直接登录");
       } else {
-        return;
+        return this.$toast.fail("当前检测人员不存在，请输入正确身份证号");
       }
     },
     // 选择日期
@@ -365,7 +398,7 @@ body {
   width: 90%;
   max-width: 800px;
   padding: 5%;
-  margin: 20px auto;
+  margin: 0px auto;
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.5);
 }
