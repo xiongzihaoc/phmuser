@@ -12,7 +12,7 @@
           </div>
           <div class="col-xs-6 col-md-6">
             <div class="tou text-right">
-              <a href="javascript:;history.back()" id="testListBack" class="green">
+              <a href="javascript:;" id="testListBack" class="green" @click.prevent.stop="historyBack">
                 返回
                 <i class="ic ic-arr-right"></i>
               </a>
@@ -90,16 +90,14 @@
         <div class="text-center btnSubmitQues">
           <button
             type="button"
-            class="btn btn-success pdlr30 btn-submit"
-            id="testSubmit"
+            class="btn pdlr30 btn-submit"
             v-if="this.infoForm.state == 3"
             disabled
-            style="color: #fff;background-color: #666;border-color: #666;"
+            style="color: #fff;background-color: #ccc;border-color: #ccc;"
           >提交答案</button>
           <button
             type="button"
             class="btn btn-success pdlr30 btn-submit"
-            id="testSubmit"
             v-else
             @click.prevent.stop="saveAnsBtn"
           >提交答案</button>
@@ -169,7 +167,10 @@ export default {
       } else if (res.code != 200 && res.code != 500) {
         return this.$toast("请完成所有量表");
       }
-    }
+    },
+    historyBack(){
+      this.$router.push('testReport')
+    },
   }
 };
 </script>

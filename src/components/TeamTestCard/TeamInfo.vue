@@ -297,6 +297,7 @@ export default {
       );
       if (res.code == 200 && res.data == null) {
         this.$toast.fail("当前检测人员不存在，请输入正确身份证号");
+        this.loginForm = {};
         return;
       } else if (res.code == 200 && res.data !== null) {
         this.editId = res.data.id;
