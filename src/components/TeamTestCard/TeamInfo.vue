@@ -228,7 +228,7 @@ export default {
         birth: "",
         idCard: "",
         hasConfirm: "",
-        editId:"",
+        editId: "",
       },
       //   Isshow: false,
       //   时间选择配置
@@ -294,9 +294,8 @@ export default {
           idCard: this.loginForm.idCard,
         }
       );
-      this.editId = res.data.id
+      this.editId = res.data.id;
       console.log(res);
-      
       if (res.code == 200 && res.data !== null) {
         this.loginForm = res.data;
         this.loginForm.deptValue = res.data.teamDept;
