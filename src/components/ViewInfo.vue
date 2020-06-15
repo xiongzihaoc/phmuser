@@ -3,26 +3,27 @@
     <!-- <header>
     <img src="../images/logo.png" alt />
   </header> -->
-    <div class="infoBox">
-      <h2 style="margin-bottom:20px;">基本信息</h2>
-      <el-form
-        ref="loginFormRef"
-        :model="loginForm"
-        :rules="Addrules"
-        class="login-form"
-        label-width="80px"
-        label-position="left"
-      >
-        <el-form-item label="姓名" prop="name">
-          <el-input
-            ref="name"
-            v-model="loginForm.name"
-            placeholder="请输入姓名"
-            type="text"
-          />
-        </el-form-item>
-        <!-- idCard -->
-        <!-- <el-form-item label="身 份 证" prop="idCard">
+    <div style="height:100%;padding-top:30px">
+      <div class="infoBox">
+        <h2 style="margin-bottom:20px;">基本信息</h2>
+        <el-form
+          ref="loginFormRef"
+          :model="loginForm"
+          :rules="Addrules"
+          class="login-form"
+          label-width="80px"
+          label-position="left"
+        >
+          <el-form-item label="姓名" prop="name">
+            <el-input
+              ref="name"
+              v-model="loginForm.name"
+              placeholder="请输入姓名"
+              type="text"
+            />
+          </el-form-item>
+          <!-- idCard -->
+          <!-- <el-form-item label="身 份 证" prop="idCard">
           <el-input
             ref="name"
             v-model="loginForm.idCard"
@@ -30,96 +31,97 @@
             type="text"
           />
         </el-form-item> -->
-        <!-- 出生年月 -->
-        <el-form-item label="出生年月" prop="birth" style="wdith:100%">
-          <el-input
-            v-model="loginForm.birth"
-            placeholder="选择日期"
-            @focus="showPopFn()"
-            readonly
-          ></el-input>
-          <van-popup
-            v-model="show"
-            position="bottom"
-            :style="{ height: '40%' }"
-          >
-            <van-datetime-picker
-              v-model="currentDate"
-              type="date"
-              :min-date="minDate"
-              :max-date="maxDate"
-              @confirm="confirmFn()"
-              @cancel="cancelFn()"
+          <!-- 出生年月 -->
+          <el-form-item label="出生年月" prop="birth" style="wdith:100%">
+            <el-input
+              v-model="loginForm.birth"
+              placeholder="选择日期"
+              @focus="showPopFn()"
+              readonly
+            ></el-input>
+            <van-popup
+              v-model="show"
+              position="bottom"
+              :style="{ height: '40%' }"
+            >
+              <van-datetime-picker
+                v-model="currentDate"
+                type="date"
+                :min-date="minDate"
+                :max-date="maxDate"
+                @confirm="confirmFn()"
+                @cancel="cancelFn()"
+              />
+            </van-popup>
+            <!-- phone -->
+          </el-form-item>
+          <el-form-item label="电话" prop="phone">
+            <el-input
+              ref="phone"
+              :disabled="true"
+              v-model="loginForm.phone"
+              placeholder="请输入电话"
+              type="text"
             />
-          </van-popup>
-          <!-- phone -->
-        </el-form-item>
-        <el-form-item label="电话" prop="phone">
-          <el-input
-            ref="phone"
-            :disabled="true"
-            v-model="loginForm.phone"
-            placeholder="请输入电话"
-            type="text"
-          />
-        </el-form-item>
-        <!-- sex -->
-        <el-form-item label="性别" prop="sex">
-          <el-select
-            v-model="loginForm.sex"
-            placeholder="请选择性别"
-            style="width:100%"
+          </el-form-item>
+          <!-- sex -->
+          <el-form-item label="性别" prop="sex">
+            <el-select
+              v-model="loginForm.sex"
+              placeholder="请选择性别"
+              style="width:100%"
+            >
+              <el-option label="男" value="男"></el-option>
+              <el-option label="女" value="女"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="婚姻状况" prop="marriage">
+            <el-select
+              v-model="loginForm.marriage"
+              placeholder="请选择"
+              style="width:100%"
+            >
+              <el-option label="未婚" value="未婚"></el-option>
+              <el-option label="已婚" value="已婚"></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="职业" prop="job">
+            <el-select
+              v-model="loginForm.job"
+              placeholder="请选择职业"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in jobList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-form-item label="文化程度" prop="edu">
+            <el-select
+              v-model="loginForm.edu"
+              placeholder="请选择职业"
+              style="width:100%"
+            >
+              <el-option
+                v-for="item in eduList"
+                :key="item.id"
+                :label="item.name"
+                :value="item.name"
+              ></el-option>
+            </el-select>
+          </el-form-item>
+          <el-button
+            class="loginBtn"
+            type="danger"
+            @click.native.prevent="handleLogin"
+            @confirm="saveEnter"
+            >保 存</el-button
           >
-            <el-option label="男" value="男"></el-option>
-            <el-option label="女" value="女"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="婚姻状况" prop="marriage">
-          <el-select
-            v-model="loginForm.marriage"
-            placeholder="请选择"
-            style="width:100%"
-          >
-            <el-option label="未婚" value="未婚"></el-option>
-            <el-option label="已婚" value="已婚"></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="职业" prop="job">
-          <el-select
-            v-model="loginForm.job"
-            placeholder="请选择职业"
-            style="width:100%"
-          >
-            <el-option
-              v-for="item in jobList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-form-item label="文化程度" prop="edu">
-          <el-select
-            v-model="loginForm.edu"
-            placeholder="请选择职业"
-            style="width:100%"
-          >
-            <el-option
-              v-for="item in eduList"
-              :key="item.id"
-              :label="item.name"
-              :value="item.name"
-            ></el-option>
-          </el-select>
-        </el-form-item>
-        <el-button
-          class="loginBtn"
-          type="danger"
-          @click.native.prevent="handleLogin"
-          @confirm="saveEnter"
-          >保 存</el-button
-        >
-      </el-form>
+        </el-form>
+      </div>
     </div>
     <van-dialog
       class="dialogSu"
@@ -291,7 +293,7 @@ body {
   width: 90%;
   max-width: 800px;
   padding: 5%;
-  margin: 20px auto;
+  margin: 0 auto;
   border-radius: 8px;
   background-color: rgba(255, 255, 255, 0.5);
 }
