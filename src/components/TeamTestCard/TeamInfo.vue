@@ -243,8 +243,9 @@ export default {
     };
   },
   created() {
-    this.infoForm = this.$route.query;
-    console.log(this.infoForm);
+    this.infoForm = this.$route.query
+    // console.log(this.$route.query);
+    // console.log(this.infoForm);
     this.getDeptList();
   },
   methods: {
@@ -276,6 +277,8 @@ export default {
           edu: this.loginForm.edu,
           // },
         });
+        console.log(res);
+        
         if (res.code !== 200) {
           return this.$toast.fail("更新失败");
         } else {
@@ -294,8 +297,9 @@ export default {
           idCard: this.loginForm.idCard,
         }
       );
+       console.log(res);
       this.editId = res.data.id;
-      console.log(res);
+     
       if (res.code == 200 && res.data !== null) {
         this.loginForm = res.data;
         this.loginForm.deptValue = res.data.teamDept;
