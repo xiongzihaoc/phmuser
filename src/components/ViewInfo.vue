@@ -22,14 +22,14 @@
           />
         </el-form-item>
         <!-- idCard -->
-        <el-form-item label="身 份 证" prop="idCard">
+        <!-- <el-form-item label="身 份 证" prop="idCard">
           <el-input
             ref="name"
             v-model="loginForm.idCard"
             placeholder="请输入身份证号码"
             type="text"
           />
-        </el-form-item>
+        </el-form-item> -->
         <!-- 出生年月 -->
         <el-form-item label="出生年月" prop="birth" style="wdith:100%">
           <el-input
@@ -159,10 +159,10 @@ export default {
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" },
         ],
-        idCard: [
-          { required: true, message: "请输入身份证号码", trigger: "blur" },
-          { validator: IdCardRule, trigger: "change" },
-        ],
+        // idCard: [
+        //   { required: true, message: "请输入身份证号码", trigger: "blur" },
+        //   { validator: IdCardRule, trigger: "change" },
+        // ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
           { validator: checkMobile, trigger: "blur" },
@@ -223,7 +223,7 @@ export default {
           const { data: res } = await this.$http.post("checkList/update", {
             id: this.loginForm.id,
             name: this.loginForm.name,
-            idCard: this.loginForm.idCard,
+            // idCard: this.loginForm.idCard,
             phone: this.loginForm.phone,
             sex: this.loginForm.sex,
             birth: this.timesChangeDate(this.loginForm.birth),

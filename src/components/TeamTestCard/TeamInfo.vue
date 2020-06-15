@@ -157,13 +157,13 @@ export default {
       return cb(new Error("请输入合法的手机号"));
     };
 
-    var IdCardRule = (rule, value, cb) => {
-      const regMoblie = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
-      if (regMoblie.test(value)) {
-        return cb();
-      }
-      return cb(new Error("请输入合法的身份证号码"));
-    };
+    // var IdCardRule = (rule, value, cb) => {
+    //   const regMoblie = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+    //   if (regMoblie.test(value)) {
+    //     return cb();
+    //   }
+    //   return cb(new Error("请输入合法的身份证号码"));
+    // };
     return {
       timesChangeDate,
       // 表单检验规则
@@ -172,7 +172,7 @@ export default {
         name: [{ required: true, message: "请输入姓名", trigger: "blur" }],
         idCard: [
           { required: true, message: "请输入身份证号码", trigger: "blur" },
-          { validator: IdCardRule, trigger: "change" },
+          // { validator: IdCardRule, trigger: "change" },
         ],
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" },
@@ -243,7 +243,7 @@ export default {
     };
   },
   created() {
-    this.infoForm = this.$route.query
+    this.infoForm = this.$route.query;
     // console.log(this.$route.query);
     // console.log(this.infoForm);
     this.getDeptList();
@@ -277,8 +277,6 @@ export default {
           edu: this.loginForm.edu,
           // },
         });
-        console.log(res);
-        
         if (res.code !== 200) {
           return this.$toast.fail("更新失败");
         } else {
@@ -297,13 +295,15 @@ export default {
           idCard: this.loginForm.idCard,
         }
       );
-       console.log(res);
-      this.editId = res.data.id;
-     
-      if (res.code == 200 && res.data !== null) {
+      if (res.code == 200 && res.data == null) {
+        this.$toast.fail("当前检测人员不存在，请输入正确身份证号");
+        return;
+      } else if (res.code == 200 && res.data !== null) {
+        this.editId = res.data.id;
+        console.log(111);
+
         this.loginForm = res.data;
         this.loginForm.deptValue = res.data.teamDept;
-        console.log(this.deptDate);
         if (res.data.teamDept != null && res.data.teamDept != "") {
           var deptName = "";
           if (this.deptDate != null && this.deptDate.length > 0) {
@@ -334,12 +334,12 @@ export default {
             this.loginForm.dept = deptName;
           }
         }
+        console.log(222);
 
         window.localStorage.setItem("order", res.data.orderNo);
         window.localStorage.setItem("infoForm", JSON.stringify(res.data));
-      } else {
-        return this.$toast.fail("当前检测人员不存在，请输入正确身份证号");
       }
+      console.log(111);
     },
     // 选择日期
     showPopFn() {

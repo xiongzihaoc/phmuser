@@ -6,7 +6,11 @@
           <div class="col-xs-12 col-sm-6 col-md-6">
             <div class="pdr10">
               <div class="log-logo">
-                <img src="../images/logologin.png" class="logo" id="hospitalLogo" />
+                <img
+                  src="../images/logologin.png"
+                  class="logo"
+                  id="hospitalLogo"
+                />
               </div>
               <div class="log-txt" id="brief" style="min-height: 100px"></div>
             </div>
@@ -14,7 +18,12 @@
           <!--就诊卡登录-->
           <div class="col-xs-12 col-sm-6 col-md-6" id="loginCard">
             <h3>用户登录</h3>
-            <el-form ref="loginFormRef" :model="loginForm" :rules="loginRules" class="login-form">
+            <el-form
+              ref="loginFormRef"
+              :model="loginForm"
+              :rules="loginRules"
+              class="login-form"
+            >
               <el-form-item prop="cardNumber">
                 <div class="input-box clearfix">
                   <i class="ic-card"></i>
@@ -30,7 +39,13 @@
               </el-form-item>
               <div class="row log-btn">
                 <div class="col-xs-4 col-md-4 ccc">
-                  <button type="button" class="mbtn" @click.prevent.stop="btnSubmitCard">登 录</button>
+                  <button
+                    type="button"
+                    class="mbtn"
+                    @click.prevent.stop="btnSubmitCard"
+                  >
+                    登 录
+                  </button>
                 </div>
               </div>
             </el-form>
@@ -46,7 +61,9 @@
       show-cancel-button
       @confirm="loginEnter"
     >
-      <p class="loginSuccess" style="text-align:center">登录成功,查看个人信息</p>
+      <p class="loginSuccess" style="text-align:center">
+        登录成功,查看个人信息
+      </p>
     </van-dialog>
   </div>
 </template>
@@ -55,15 +72,17 @@ export default {
   data() {
     return {
       loginForm: {
-        cardNumber: ""
+        cardNumber: "",
       },
       loginRules: {
-        cardNumber: [{ required: true, message: "请输入卡号", trigger: "blur" }]
+        cardNumber: [
+          { required: true, message: "请输入卡号", trigger: "blur" },
+        ],
       },
       show: false,
       personalList: {},
       Num: "",
-      PrOrderNo: ""
+      PrOrderNo: "",
     };
   },
   created() {
@@ -90,16 +109,13 @@ export default {
   },
   methods: {
     async btnSubmitCard() {
-      // this.$refs.loginFormRef.validate(async valid => {
-      //   console.log(valid);
-
-      // if (!valid) return;
       const { data: res } = await this.$http.post("checkList/confirmInfo", {
-        orderNo: this.loginForm.cardNumber
+        orderNo: this.loginForm.cardNumber,
       });
-      if (res.code != 200 || res.data == null)
-        return 
-        // this.$toast.fail("卡号不存在");
+      console.log(res);
+      
+      if (res.code != 200 || res.data == null) return;
+      // this.$toast.fail("卡号不存在");
       this.personalList = res.data;
       this.Num = res.data.hasConfirm;
       window.localStorage.setItem("order", this.loginForm.cardNumber);
@@ -108,23 +124,22 @@ export default {
         JSON.stringify(this.personalList)
       );
       this.show = true;
-      // });
     },
     loginEnter() {
       if (this.Num == 0) {
         this.$router.push({
-          path: "/lookInfo"
+          path: "/lookInfo",
         });
       } else {
         this.$router.push({
-          path: "/testReport"
+          path: "/testReport",
         });
       }
-    }
-  }
+    },
+  },
 };
 </script>
-<style lang='less'>
+<style lang="less">
 .log-box {
   position: relative;
 }
