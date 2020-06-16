@@ -244,11 +244,10 @@ export default {
   },
   created() {
     this.infoForm = this.$route.query;
-    // console.log(this.$route.query);
-    // console.log(this.infoForm);
     this.getDeptList();
   },
   methods: {
+    // 获取部门列表
     async getDeptList() {
       const { data: res } = await this.$http.post("teamList/dept/tree", {
         code: this.infoForm.deptCode,
@@ -266,7 +265,6 @@ export default {
           teamNo: this.infoForm.singleNum,
           teamPackageUuid: "",
           // teamPackageUuid: this.infoForm.teamPackageUuid,
-          // patient: {
           idCard: this.loginForm.idCard,
           name: this.loginForm.name,
           phone: this.loginForm.phone,
@@ -275,10 +273,10 @@ export default {
           job: this.loginForm.job,
           marriage: this.loginForm.marriage,
           edu: this.loginForm.edu,
-          // },
         });
         if (res.code !== 200) {
-          return this.$toast.fail("更新失败");
+          this.$toast.fail("更新失败,请重新操作");
+          return;
         } else {
           this.$router.replace({
             path: "/testReport",
@@ -295,14 +293,14 @@ export default {
           idCard: this.loginForm.idCard,
         }
       );
+      // 如果data为空 不存在该身份
       if (res.code == 200 && res.data == null) {
         this.$toast.fail("当前检测人员不存在，请输入正确身份证号");
         this.loginForm = {};
         return;
       } else if (res.code == 200 && res.data !== null) {
+        // data不为空渲染数据
         this.editId = res.data.id;
-        console.log(111);
-
         this.loginForm = res.data;
         this.loginForm.deptValue = res.data.teamDept;
         if (res.data.teamDept != null && res.data.teamDept != "") {
@@ -335,8 +333,6 @@ export default {
             this.loginForm.dept = deptName;
           }
         }
-        console.log(222);
-
         window.localStorage.setItem("order", res.data.orderNo);
         window.localStorage.setItem("infoForm", JSON.stringify(res.data));
       }
