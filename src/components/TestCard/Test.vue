@@ -1,28 +1,32 @@
 <template>
-<body class="ubg2">
-  <!-- 公用头部组件 -->
-  <Header></Header>
-  <div class="container">
-    <div class="row idx conFlex">
-      <div class="col-sm-12 col-md-6">
-        <div class="idx-box">
-          <div>
-            <i class="ic ic-edit"></i>
+  <body class="ubg2">
+    <!-- 公用头部组件 -->
+    <Header></Header>
+    <div class="container">
+      <div class="row idx">
+        <div class="col-sm-12 col-md-6">
+          <div class="idx-box">
+            <div>
+              <i class="ic ic-edit"></i>
+            </div>
+            <a href="javascript:;" class="mbtn" @click.prevent.stop="test"
+              >测试</a
+            >
           </div>
-          <a href="javascript:;" class="mbtn" @click.prevent.stop="test">测试</a>
+        </div>
+        <div class="col-sm-12 col-md-6">
+          <div class="idx-box">
+            <div>
+              <i class="ic ic-search"></i>
+            </div>
+            <a href="javascript:;" class="mbtn" @click.prevent.stop="report"
+              >报告</a
+            >
+          </div>
         </div>
       </div>
-      <!-- <div class="col-sm-12 col-md-6">
-        <div class="idx-box">
-          <div>
-            <i class="ic ic-search"></i>
-          </div>
-          <a href="javascript:;" class="mbtn" @click.prevent.stop="report">报告</a>
-        </div>
-      </div>-->
     </div>
-  </div>
-</body>
+  </body>
 </template>
 <script>
 import Header from "../common/header";
@@ -36,18 +40,21 @@ export default {
     test() {
       this.$router.push("testWork");
     },
-    report() {}
-  }
+    // 跳转到报告
+    report() {
+      let { state } = JSON.parse(window.localStorage.getItem("infoForm"));
+      console.log(state);
+      if (state != 3) {
+        return this.$toast.fail("报告未生成,请先提交量表");
+      } else {
+        this.$router.push("reportDetail");
+      }
+    },
+  },
 };
 </script>
-<style lang='less'>
+<style lang="less">
 .row2 {
   display: flex;
-}
-.conFlex {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  
 }
 </style>

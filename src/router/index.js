@@ -33,6 +33,11 @@ const routes = [{
     component: () => import('@/components/TestCard/TestWork.vue'),
   },
   {
+    path: '/reportDetail',
+    name: 'testWork',
+    component: () => import('@/components/TestCard/ReportDetail.vue'),
+  },
+  {
     path: '/StartTset',
     name: 'StartTset',
     component: () => import('@/components/TestCard/StartTset.vue'),
