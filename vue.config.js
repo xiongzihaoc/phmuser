@@ -3,6 +3,20 @@ module.exports = {
   outputDir: "dist",
   // 去除.map文件
   productionSourceMap: false,
+  devServer: {
+    proxy: {
+      '/api': {
+        target: 'http://xxx:20101/',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': ''
+        }
+      }
+    },
+    // host: "localhost",
+    open: true,
+    port: 8089
+  },
   configureWebpack: () => ({
     optimization: {
       splitChunks: {

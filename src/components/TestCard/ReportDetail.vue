@@ -61,12 +61,15 @@ export default {
         orderNo: this.Number,
       });
       console.log(res);
-
       this.userInfo = res.data.info;
       this.reportInfo = res.data.report;
       this.reportInfo.forEach((item) => {
         item.factor = eval(item.factor);
       });
+    },
+    // 返回
+    historyBack() {
+      this.$router.push("testReport");
     },
   },
 };

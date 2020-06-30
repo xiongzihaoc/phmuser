@@ -16,10 +16,10 @@ Vue.use(Vant)
 import axios from 'axios'
 // // 配置axios
 // 测试
-// axios.defaults.baseURL = 'http://192.168.0.117:8086/zhuoya-sheet/'
+axios.defaults.baseURL = 'http://192.168.0.117:8086/zhuoya-sheet/'
 // 正式
-axios.defaults.baseURL = 'http://www.phmzykj.com/zhuoya-sheet/'
-axios.defaults.timeout = 10000
+// axios.defaults.baseURL = 'http://www.phmzykj.com/zhuoya-sheet/'
+axios.defaults.timeout = 30000
 // axios请求拦截器
 axios.interceptors.request.use(function (config) {
   NProgress.start()
