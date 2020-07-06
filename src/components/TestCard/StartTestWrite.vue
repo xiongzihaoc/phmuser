@@ -163,15 +163,29 @@ export default {
     };
   },
   created() {
+    console.log();
+
     this.getSheetList();
+    // 开始答题的state为0 进入答题页面状态更改为继续答题 state变为1
+    if (this.$route.query.state == 0) {
+      this.goOn();
+    }
   },
   methods: {
+    // 状态更改为 继续答题 state == 1
+    async goOn() {
+      const { data: res } = await this.$http.post("checkList/checked", {
+        ansUuid: this.$route.query.ansUuid,
+      });
+    },
     // 获取量表题目列表
     async getSheetList() {
       const { data: res } = await this.$http.post("sheetQues/list", {
         sheetUuid: this.$route.query.sheetUuid,
-        ansUuid:this.$route.query.ansUuid
+        ansUuid: this.$route.query.ansUuid,
       });
+      console.log(res);
+
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
       for (var i = 0; i < this.sheetList.length; i++) {
