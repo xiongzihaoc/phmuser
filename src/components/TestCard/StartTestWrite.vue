@@ -1,116 +1,150 @@
 <template>
-<body class="ubg2">
-  <!-- 公用头部组件 -->
-  <!-- <Header></Header> -->
-  <!------题目列表------>
-  <div class="mb20" id="testQuestion" style="overflow:hidden">
-    <div class="row mt20 mb20">
-      <div class="col-xs-6 col-md-6">
-        <div class="taocanName" style="padding-left: 2px;"></div>
-      </div>
-      <div class="col-xs-6 col-md-6">
-        <div class="tou text-right">
-          <a
-            href="javascript:;"
-            id="questionGoBack"
-            class="backG green"
-            @click.prevent.stop="backStart"
-          >返回>></a>
+  <body class="ubg2">
+    <!-- 公用头部组件 -->
+    <!-- <Header></Header> -->
+    <!------题目列表------>
+    <div class="mb20" id="testQuestion" style="overflow:hidden">
+      <div class="row mt20 mb20">
+        <div class="col-xs-6 col-md-6">
+          <div class="taocanName" style="padding-left: 2px;"></div>
         </div>
-      </div>
-    </div>
-    <div class="test-answer">
-      <div class="pd2">
-        <h2 id="sheetName" data-id="368">{{this.$route.query.name}}</h2>
-      </div>
-      <div class="pd2">
-        <div class="row3">
-          <h3 class="gray col-xs-2 col-md-2 text-left" style="width:22%;">进度条</h3>
-          <van-progress
-            color="#FF6969"
-            stroke-width="7"
-            :show-pivot="false"
-            :percentage="optionProgress"
-            style="width:62%;"
-          />
-          <div class="col-xs-2 col-md-2 text-right" style="width:16%;">
-            <span class="red">{{this.num + 1}}</span>
-            <span class="gray">/{{sheetLength}}</span>
+        <div class="col-xs-6 col-md-6">
+          <div class="tou text-right">
+            <a
+              href="javascript:;"
+              id="questionGoBack"
+              class="backG green"
+              @click.prevent.stop="backStart"
+              >返回>></a
+            >
           </div>
         </div>
       </div>
+      <div class="test-answer">
+        <div class="pd2">
+          <h2 id="sheetName" data-id="368">{{ this.$route.query.name }}</h2>
+        </div>
+        <div class="pd2">
+          <div class="row3">
+            <h3 class="gray col-xs-2 col-md-2 text-left" style="width:22%;">
+              进度条
+            </h3>
+            <van-progress
+              color="#FF6969"
+              stroke-width="7"
+              :show-pivot="false"
+              :percentage="optionProgress"
+              style="width:62%;"
+            />
+            <div class="col-xs-2 col-md-2 text-right" style="width:16%;">
+              <span class="red">{{ this.num + 1 }}</span>
+              <span class="gray">/{{ sheetLength }}</span>
+            </div>
+          </div>
+        </div>
 
-      <div class="pd2">
-        <div id="quizBox" class="clearfix" style="min-height: 100px" v-if="this.sheetList[num]">
-          <!-- 题目标题 -->
+        <div class="pd2">
           <div
-            class="a-title mb20 clearfix"
-            data-questionid="9954"
-            data-type="1"
-            v-html="this.sheetList[this.num].quesMedia"
-          ></div>
-          <div
-            v-for="(item,index) in sheetList[num].option"
-            :key="index"
-            :class="[item.selected==1?'radio active':'radio']"
-            @click="radioCheck(item,index)"
+            id="quizBox"
+            class="clearfix"
+            style="min-height: 100px"
+            v-if="this.sheetList[num]"
           >
-            <i :class="[item.selected==1?'ic ic-radio ic-radio-active':'ic ic-radio']"></i>
-            {{item.optContent}}
-            <img class="aImg" v-bind:src="item.descriptionImg" />
+            <!-- 题目标题 -->
+            <div
+              class="a-title mb20 clearfix"
+              data-questionid="9954"
+              data-type="1"
+              v-html="this.sheetList[this.num].quesMedia"
+            ></div>
+            <div
+              v-for="(item, index) in sheetList[num].option"
+              :key="index"
+              :class="[item.selected == 1 ? 'radio active' : 'radio']"
+              @click="radioCheck(item, index)"
+            >
+              <i
+                :class="[
+                  item.selected == 1
+                    ? 'ic ic-radio ic-radio-active'
+                    : 'ic ic-radio',
+                ]"
+              ></i>
+              {{ item.optContent }}
+              <img class="aImg" v-bind:src="item.descriptionImg" />
+            </div>
           </div>
-        </div>
-        <div class="row mt40" v-if="this.sheetList[num]">
-          <div class="col-xs-12 col-md-4 tips">
-            <span class="red">请注意：</span>
-            <span
-              class="gray"
-              id="tips"
-              v-if="this.sheetList[num].quesType == 1 || this.sheetList[num].quesType == 4"
-            >单选题，请选择！</span>
-            <span class="gray" id="tips" v-else-if="this.sheetList[num].quesType == 2">多选题，请选择！</span>
-            <span class="gray" id="tips" v-else-if="this.sheetList[num].quesType == 3">文本题 ！</span>
-          </div>
-          <div class="col-xs-12 col-md-8 text-right">
-            <a
-              href="javascript:;"
-              class="btn btn-danger bg-red pdlr30"
-              id="btnPre"
-              v-show="btnopen"
-              @click.prevent.stop="backTo"
-            >返回上一题</a>
-            <a
-              href="javascript:;"
-              class="btn btn-danger bg-red pdlr30 ml10"
-              id="btnNext"
-              @click="nextQues"
-              v-show="nextQu"
-            >下一题</a>
-            <button
-              type="button"
-              class="btn btn-success pdlr30 ml20"
-              id="btnSubmit"
-              v-show="btnSubmit"
-              @click="btnSave"
-            >提交</button>
+          <div class="row mt40" v-if="this.sheetList[num]">
+            <div class="col-xs-12 col-md-4 tips">
+              <span class="red">请注意：</span>
+              <span
+                class="gray"
+                id="tips"
+                v-if="
+                  this.sheetList[num].quesType == 1 ||
+                    this.sheetList[num].quesType == 4
+                "
+                >单选题，请选择！</span
+              >
+              <span
+                class="gray"
+                id="tips"
+                v-else-if="this.sheetList[num].quesType == 2"
+                >多选题，请选择！</span
+              >
+              <span
+                class="gray"
+                id="tips"
+                v-else-if="this.sheetList[num].quesType == 3"
+                >文本题 ！</span
+              >
+            </div>
+            <div class="col-xs-12 col-md-8 text-right">
+              <a
+                href="javascript:;"
+                class="btn btn-danger bg-red pdlr30"
+                id="btnPre"
+                v-show="btnopen"
+                @click.prevent.stop="backTo"
+                >返回上一题</a
+              >
+              <a
+                href="javascript:;"
+                class="btn btn-danger bg-red pdlr30 ml10"
+                id="btnNext"
+                @click="nextQues"
+                v-show="nextQu"
+                >下一题</a
+              >
+              <button
+                type="button"
+                class="btn btn-success pdlr30 ml20"
+                id="btnSubmit"
+                v-show="btnSubmit"
+                @click="btnSave"
+              >
+                提交
+              </button>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!--提交单套试题弹框-->
-  <van-dialog
-    class="dialogSu"
-    :showCancelButton="true"
-    v-model="show"
-    title="提示"
-    show-cancel-button
-    @confirm="writeEnter"
-  >
-    <p class="loginSuccess" style="text-align:center">本套试题做题完毕，确认后不能再更改。</p>
-  </van-dialog>
-</body>
+    <!--提交单套试题弹框-->
+    <van-dialog
+      class="dialogSu"
+      :showCancelButton="true"
+      v-model="show"
+      title="提示"
+      show-cancel-button
+      @confirm="writeEnter"
+    >
+      <p class="loginSuccess" style="text-align:center">
+        本套试题做题完毕，确认后不能再更改。
+      </p>
+    </van-dialog>
+  </body>
 </template>
 <script>
 import Header from "../common/header";
@@ -125,7 +159,7 @@ export default {
       btnopen: false,
       btnSubmit: false,
       nextQu: true,
-      show: false
+      show: false,
     };
   },
   created() {
@@ -135,7 +169,8 @@ export default {
     // 获取量表题目列表
     async getSheetList() {
       const { data: res } = await this.$http.post("sheetQues/list", {
-        sheetUuid: this.$route.query.sheetUuid
+        sheetUuid: this.$route.query.sheetUuid,
+        ansUuid:this.$route.query.ansUuid
       });
       this.sheetList = res.rows;
       this.sheetLength = res.rows.length;
@@ -267,7 +302,7 @@ export default {
           optOrder: optOrder.join(","),
           optScore: optScore.join(","),
           optContent: optContent.join(","),
-          optLabel: optLabel
+          optLabel: optLabel,
         };
         const { data: res } = await this.$http.post(
           "sheetQues/subSingleAnswer",
@@ -289,7 +324,7 @@ export default {
           quesContent: this.sheetList[this.num].quesMedia,
           optScore: score,
           optContent: optContent.join(","),
-          optLabel: optLabel
+          optLabel: optLabel,
         };
         const { data: res } = await this.$http.post(
           "sheetQues/subSingleAnswer",
@@ -308,7 +343,7 @@ export default {
       }
       const { data: res } = await this.$http.post("sheetQues/approve", {
         ansUuid: this.$route.query.ansUuid,
-        sheetUuid: this.$route.query.sheetUuid
+        sheetUuid: this.$route.query.sheetUuid,
       });
       if (res.code != 200) {
         return this.$toast("错误");
@@ -316,18 +351,18 @@ export default {
         this.show = true;
       }
     },
-    // 确定提交跳转 
+    // 确定提交跳转
     writeEnter() {
       this.$router.replace({ path: "testWork" });
     },
     // 返回跳转到开始答题页面
     backStart() {
       this.$router.push("testWork");
-    }
-  }
+    },
+  },
 };
 </script>
-<style lang='less'>
+<style lang="less">
 .row3 {
   display: flex;
   justify-content: center; /*水平居中*/
