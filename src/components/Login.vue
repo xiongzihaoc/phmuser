@@ -30,7 +30,7 @@
                   <input
                     type="text"
                     class="input input-80"
-                    placeholder="请输入就诊卡号"
+                    placeholder="请输入卡号"
                     id="iptCard"
                     v-model="loginForm.cardNumber"
                     autofocus="autofocus"
@@ -81,42 +81,24 @@ export default {
       },
       show: false,
       personalList: {},
-      Num: "",
-      PrOrderNo: "",
+      hasConfirmNum: "",
+      teamNum: "",
+      CardNumber: "",
     };
   },
-  created() {
-    this.PrOrderNo = this.$route.query.orderNo;
-    if (this.PrOrderNo !== "") {
-      //   this.loginForm.cardNumber = this.PrOrderNo;
-      //   const { data: res } = this.$http.post("checkList/confirmInfo", {
-      //     orderNo: this.loginForm.cardNumber.trim()
-      //   });
-      //   if (res.code != 200 || res.data == null)
-      //     return this.$toast.fail("卡号不存在");
-      //   this.personalList = res.data;
-      //   this.Num = res.data.hasConfirm;
-      //   window.localStorage.setItem("order", this.loginForm.cardNumber);
-      //   window.localStorage.setItem(
-      //     "infoForm",
-      //     JSON.stringify(this.personalList)
-      //   );
-      //   this.show = true;
-      // }
-      this.loginForm.cardNumber = this.PrOrderNo;
-      this.btnSubmitCard();
-    }
-  },
+  created() {},
   methods: {
     async btnSubmitCard() {
+      this.CardNumber = this.loginForm.cardNumber.trim();
       const { data: res } = await this.$http.post("checkList/confirmInfo", {
-        orderNo: this.loginForm.cardNumber.trim(),
+        orderNo: this.CardNumber,
       });
       if (res.code != 200 || res.data == null)
-      return this.$toast.fail("卡号不存在");
+        return this.$toast.fail("卡号不存在");
       this.personalList = res.data;
-      this.Num = res.data.hasConfirm;
-      window.localStorage.setItem("order", this.loginForm.cardNumber);
+      this.hasConfirmNum = res.data.hasConfirm;
+      this.teamNum = res.data.source;
+      window.localStorage.setItem("order", this.CardNumber);
       window.localStorage.setItem(
         "infoForm",
         JSON.stringify(this.personalList)
@@ -124,10 +106,18 @@ export default {
       this.show = true;
     },
     loginEnter() {
-      if (this.Num == 0) {
-        this.$router.push({
-          path: "/lookInfo",
-        });
+      // Num == 0 第一次登录
+      if (this.hasConfirmNum == 0) {
+        // team == 1 团队卡号
+        if (this.teamNum == 1) {
+          this.$router.push({
+            path: "/lookTeamInfo?orderNo=" + this.CardNumber,
+          });
+        } else {
+          this.$router.push({
+            path: "/lookInfo",
+          });
+        }
       } else {
         this.$router.push({
           path: "/testReport",

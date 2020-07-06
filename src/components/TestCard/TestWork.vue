@@ -137,6 +137,8 @@ export default {
       this.taoCanList = res.data;
     },
     jumpStart(info) {
+      console.log(info);
+      
       this.$router.push({
         path: "StartTset",
         query: {
