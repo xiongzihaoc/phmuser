@@ -23,14 +23,14 @@
             />
           </el-form-item>
           <!-- idCard -->
-          <!-- <el-form-item label="身 份 证" prop="idCard">
-          <el-input
-            ref="name"
-            v-model="loginForm.idCard"
-            placeholder="请输入身份证号码"
-            type="text"
-          />
-        </el-form-item> -->
+          <el-form-item label="身 份 证" prop="idCard">
+            <el-input
+              ref="name"
+              v-model="loginForm.idCard"
+              placeholder="请输入身份证号码"
+              type="text"
+            />
+          </el-form-item>
           <!-- 出生年月 -->
           <el-form-item label="出生年月" prop="birth" style="wdith:100%">
             <el-input
@@ -148,7 +148,7 @@ export default {
       return cb(new Error("请输入合法的手机号"));
     };
     var IdCardRule = (rule, value, cb) => {
-      const regMoblie = /^[1-9]\d{5}(18|19|20|(3\d))\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
+      const regMoblie = /^[1-9]\d{5}(18|19|20)\d{2}((0[1-9])|(1[0-2]))(([0-2][1-9])|10|20|30|31)\d{3}[0-9Xx]$/;
       if (regMoblie.test(value)) {
         return cb();
       }
@@ -161,10 +161,10 @@ export default {
         docName: [
           { required: true, message: "请输入医生姓名", trigger: "blur" },
         ],
-        // idCard: [
-        //   { required: true, message: "请输入身份证号码", trigger: "blur" },
-        //   { validator: IdCardRule, trigger: "change" },
-        // ],
+        idCard: [
+          { required: true, message: "请输入身份证号码", trigger: "blur" },
+          { validator: IdCardRule, trigger: "change" },
+        ],
         phone: [
           { required: true, message: "请输入手机号码", trigger: "blur" },
           { validator: checkMobile, trigger: "blur" },
@@ -225,7 +225,7 @@ export default {
           const { data: res } = await this.$http.post("checkList/update", {
             id: this.loginForm.id,
             name: this.loginForm.name,
-            // idCard: this.loginForm.idCard,
+            idCard: this.loginForm.idCard,
             phone: this.loginForm.phone,
             sex: this.loginForm.sex,
             birth: this.timesChangeDate(this.loginForm.birth),
@@ -245,6 +245,7 @@ export default {
             id: this.loginForm.id,
             phone: this.loginForm.phone,
             sex: this.loginForm.sex,
+            idCard: this.loginForm.idCard,
             birth: this.timesChangeDate(this.loginForm.birth),
             job: this.loginForm.job,
             marriage: this.loginForm.marriage,
