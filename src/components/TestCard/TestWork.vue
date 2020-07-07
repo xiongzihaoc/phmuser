@@ -188,6 +188,8 @@ export default {
       window.localStorage.setItem("infoForm", JSON.stringify(res.data));
     },
     async saveAnsBtn() {
+      // console.log();
+      
       const { data: res } = await this.$http.post("checkList/approvePackage", {
         orderNo: this.order,
       });
